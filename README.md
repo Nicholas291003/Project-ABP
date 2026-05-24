@@ -1,6 +1,6 @@
-## Sistem E-Ticketing Transportasi
+## Travelg✦ Sistem E-Ticketing Transportasi
 
-Sistem E-Ticketing Transportasi adalah aplikasi berbasis web yang dirancang untuk mempermudah proses pemesanan tiket perjalanan (Bus, Kereta Api, Travel, dan Pesawat) secara *online*. Proyek ini dibangun menggunakan *framework* Laravel dan mengimplementasikan arsitektur peran (Role-Based Access Control) untuk Admin dan Penumpang.
+Travelg✦ Sistem E-Ticketing Transportasi adalah aplikasi berbasis web dan app yang dirancang untuk mempermudah proses pemesanan tiket perjalanan (Bus, Kereta Api, Travel, dan Pesawat) secara *online*. Proyek ini dibangun menggunakan *framework* Laravel dan mengimplementasikan arsitektur peran (Role-Based Access Control) untuk Admin dan Penumpang.
 
 ## ✨ Fitur Utama
 
