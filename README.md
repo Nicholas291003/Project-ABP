@@ -77,7 +77,7 @@ Ikuti langkah-langkah berikut untuk menjalankan program:
     ```
  7. **Migrasi isi database:**
     ```bash
-    php artisan db:seed --class=NamaSeeder
+    php artisan db:seed
     ```
  8. **Jalankan Aplikasi:**
     ```bash
