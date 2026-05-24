@@ -16,7 +16,7 @@ Travelg✦ Sistem E-Ticketing Transportasi adalah aplikasi berbasis web dan app 
 - **Pencarian Tiket Terintegrasi:** Mencari jadwal keberangkatan berdasarkan kota asal, kota tujuan, dan tanggal keberangkatan.
 - **Pemesanan Kursi:** Pemilihan nomor kursi secara spesifik sesuai kapasitas armada.
 - **Simulasi Pembayaran:** Proses *checkout* dengan berbagai pilihan metode pembayaran (Transfer Bank, E-Wallet).
-- **Cetak E-Ticket:** Pembuatan *Boarding Pass* digital yang interaktif dan siap cetak (PDF/Print).
+- **Cetak E-Ticket:** Pembuatan *Boarding Pass* digital yang interaktif.
 - **Riwayat Pemesanan:** Melacak status tiket (Booked / Paid).
 
 ## 🛠️ Teknologi yang Digunakan
