@@ -1,27 +1,34 @@
 @extends('layouts.admin')
 
+@section('title', 'Data Transportasi - Travelgo')
+
 @section('content')
-<div class="flex-1 overflow-y-auto p-6 lg:p-8 bg-gray-50 pb-24">
+<div class="p-8 space-y-8 flex-1">
     
+    {{-- Notifikasi Sukses Gunting Kaca --}}
     @if(session('success'))
-        <div class="mb-4 p-4 bg-green-100 border border-green-200 text-green-700 rounded-xl flex items-center">
-            <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}
+        <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl flex items-center shadow-lg shadow-black/10">
+            <i data-lucide="check-circle" class="mr-2 w-5 h-5"></i> 
+            <span class="text-sm font-semibold">{{ session('success') }}</span>
         </div>
     @endif
 
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    {{-- Header Halaman --}}
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Data Transportasi</h1>
-            <p class="text-sm text-gray-500 mt-1">Kelola data seluruh armada kendaraan yang tersedia.</p>
+            <h1 class="text-3xl font-black text-white tracking-tight">Data Transportasi</h1>
+            <p class="text-sm text-slate-400 mt-1">Kelola data seluruh armada kendaraan yang tersedia di sistem.</p>
         </div>
-        <a href="{{ route('admin.transportations.create') }}" class="bg-primary hover:bg-primaryDark text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-sm flex items-center">
-            <i class="fa-solid fa-plus mr-2"></i> Tambah Armada
+        <a href="{{ route('admin.transportations.create') }}" class="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 text-slate-950 text-sm font-bold hover:brightness-110 transition-all shadow-lg shadow-teal-500/20">
+            <i data-lucide="plus" class="w-4.5 h-4.5 stroke-[3px]"></i>
+            <span>Tambah Armada</span>
         </a>
     </div>
 
-    <div class="bg-white p-4 rounded-t-xl border border-gray-200 border-b-0 flex flex-col sm:flex-row justify-between items-center gap-4">
+    {{-- Filter & Pencarian Kontrol Kaca --}}
+    <div class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 p-4 rounded-t-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
         <div class="flex space-x-2 w-full sm:w-auto">
-            <select class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-primary focus:border-primary block px-3 py-2">
+            <select class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all">
                 <option value="">Semua Jenis</option>
                 <option value="kereta">Kereta Api</option>
                 <option value="bus">Bus / Travel</option>
@@ -29,64 +36,65 @@
             </select>
         </div>
         <div class="relative w-full sm:w-72">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
+                <i data-lucide="search" class="w-4 h-4"></i>
             </div>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-2" placeholder="Cari nama atau kode...">
+            <input type="text" class="w-full bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400 pl-10 p-2.5 transition-all" placeholder="Cari nama atau kode...">
         </div>
     </div>
 
-    <div class="bg-white rounded-b-xl shadow-sm border border-gray-200 overflow-hidden">
+    {{-- Tabel Data Utama --}}
+    <div class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 rounded-b-2xl overflow-hidden shadow-xl shadow-black/10">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200">
-                        <th class="py-3 px-6 font-semibold">Kode</th>
-                        <th class="py-3 px-6 font-semibold">Nama Transportasi</th>
-                        <th class="py-3 px-6 font-semibold">Jenis & Kelas</th>
-                        <th class="py-3 px-6 font-semibold text-center">Kursi</th>
-                        <th class="py-3 px-6 font-semibold">Status</th>
-                        <th class="py-3 px-6 font-semibold text-center">Aksi</th>
+                    <tr class="border-b border-slate-800 text-[11px] text-slate-500 font-extrabold uppercase tracking-widest bg-slate-950/20">
+                        <th class="py-4 px-6">Kode</th>
+                        <th class="py-4 px-6">Nama Transportasi</th>
+                        <th class="py-4 px-6">Jenis & Kelas</th>
+                        <th class="py-4 px-6 text-center">Kursi</th>
+                        <th class="py-4 px-6">Status</th>
+                        <th class="py-4 px-6 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm divide-y divide-gray-100">
+                <tbody class="text-sm divide-y divide-slate-800/40">
                     @forelse($transportations as $item)
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="py-4 px-6 font-medium text-gray-900">{{ $item->kode }}</td>
-                        <td class="py-4 px-6 font-semibold text-gray-800">{{ $item->nama }}</td>
+                    <tr class="text-slate-300 hover:bg-slate-900/30 transition group">
+                        <td class="py-4 px-6 font-bold text-slate-200 group-hover:text-teal-400 transition-colors">{{ $item->kode }}</td>
+                        <td class="py-4 px-6 font-semibold text-slate-200">{{ $item->nama }}</td>
                         <td class="py-4 px-6">
-                            <div class="flex items-center">
+                            <div class="flex items-center text-slate-300 font-medium">
                                 @if($item->jenis == 'kereta')
-                                    <i class="fa-solid fa-train text-gray-400 mr-2 w-4"></i> Kereta Api
+                                    <i data-lucide="train" class="text-teal-400 mr-2 w-4 h-4"></i> Kereta Api
                                 @elseif($item->jenis == 'bus')
-                                    <i class="fa-solid fa-bus text-gray-400 mr-2 w-4"></i> Bus
+                                    <i data-lucide="bus" class="text-teal-400 mr-2 w-4 h-4"></i> Bus
                                 @else
-                                    <i class="fa-solid fa-plane text-gray-400 mr-2 w-4"></i> Pesawat
+                                    <i data-lucide="plane" class="text-teal-400 mr-2 w-4 h-4"></i> Pesawat
                                 @endif
                             </div>
-                            <span class="text-xs text-gray-500 mt-1 block">{{ $item->kelas }}</span>
+                            <span class="text-xs text-slate-500 mt-1 block font-medium">{{ $item->kelas }}</span>
                         </td>
-                        <td class="py-4 px-6 text-center font-medium text-gray-700">{{ $item->jumlah_kursi }}</td>
+                        <td class="py-4 px-6 text-center font-bold text-slate-300">{{ $item->jumlah_kursi }}</td>
                         <td class="py-4 px-6">
                             @if($item->status == 'aktif')
-                                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Aktif</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Aktif</span>
                             @elseif($item->status == 'maintenance')
-                                <span class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full">Maintenance</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Maintenance</span>
                             @else
-                                <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Nonaktif</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Nonaktif</span>
                             @endif
                         </td>
                         <td class="py-4 px-6 text-center">
-                            <div class="flex items-center justify-center">
-                                <a href="{{ route('admin.transportations.edit', $item->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-primary hover:bg-primary hover:text-white transition mx-1" title="Edit">
-                                    <i class="fa-regular fa-pen-to-square"></i>
+                            <div class="flex items-center justify-center space-x-2">
+                                <a href="{{ route('admin.transportations.edit', $item->id) }}" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-teal-400 hover:border-teal-400 transition-all inline-flex items-center" title="Edit">
+                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                 </a>
                                 
-                                <form action="{{ route('admin.transportations.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus armada ini?')">
+                                <form action="{{ route('admin.transportations.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus armada ini?')" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition mx-1" title="Hapus">
-                                        <i class="fa-regular fa-trash-can"></i>
+                                    <button type="submit" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-400 hover:border-rose-400 transition-all inline-flex items-center cursor-pointer" title="Hapus">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </form>
                             </div>
@@ -94,14 +102,15 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="py-8 text-center text-gray-500">Belum ada data armada transportasi.</td>
+                        <td colspan="6" class="py-8 text-center text-slate-500 font-medium">Belum ada data armada transportasi.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
         
-        <div class="px-6 py-4 border-t border-gray-200">
+        {{-- Navigasi Paginasi Gelap --}}
+        <div class="px-6 py-4 border-t border-slate-800/60 bg-slate-950/20">
             {{ $transportations->links() }}
         </div>
     </div>
