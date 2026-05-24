@@ -32,7 +32,7 @@ Sebelum menjalankan proyek ini, pastikan komputer Anda telah terinstal:
 - [PHP](https://www.php.net/) (Minimal versi 8.2)
 - [Composer](https://getcomposer.org/)
 - [Node.js & NPM](https://nodejs.org/)
-- [MySQL](https://www.mysql.com/) / XAMPP / Laragon
+- [MySQL](https://www.mysql.com/) & XAMPP
 
 ## 🚀 Panduan Instalasi
 
@@ -62,7 +62,7 @@ Ikuti langkah-langkah berikut untuk menjalankan program:
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
-    DB_DATABASE=nama_database_anda
+    DB_DATABASE=travelgo_db
     DB_USERNAME=root
     DB_PASSWORD=
     ```
@@ -75,10 +75,14 @@ Ikuti langkah-langkah berikut untuk menjalankan program:
     ```bash
     php artisan migrate
     ```
- 7. **Jalankan Aplikasi:**
+ 7. **Migrasi isi database:**
+    ```bash
+    php artisan db:seed --class=NamaSeeder
+    ```
+ 8. **Jalankan Aplikasi:**
     ```bash
     php artisan serve
-    ``` 
+    ```
 ----
 
 ## 🗄️ Struktur Database (Tabel Utama)
