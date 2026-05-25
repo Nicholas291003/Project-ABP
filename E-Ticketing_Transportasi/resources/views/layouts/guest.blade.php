@@ -3,248 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Pesan Tiket Transportasi Online') - Travelgo </title>
+    <title>@yield('title', 'Pesan Tiket Transportasi Online') - Travelgo</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        primary: '#1BA0E2',
-                        primaryDark: '#0D7BBA',
-                        secondary: '#FF5E1F',
-                        secondaryDark: '#E04A0D',
-                    }
-                }
-            }
-        }
-    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
     </style>
     @yield('styles')
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-slate-100 text-slate-800 font-sans antialiased flex flex-col min-h-screen relative overflow-x-hidden">
 
-    <nav id="navbar" class="fixed w-full z-50 bg-white shadow-md transition-all duration-300">
+    <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-300/15 blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-[20%] right-[-5%] w-[600px] h-[600px] rounded-full bg-teal-400/10 blur-[150px] pointer-events-none z-0"></div>
+    <div class="absolute top-[40%] left-[20%] w-[400px] h-[400px] rounded-full bg-indigo-300/10 blur-[130px] pointer-events-none z-0"></div>
+
+    <nav id="navbar" class="fixed w-full z-50 bg-white/60 backdrop-blur-xl border-b border-white/40 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 sm:h-20">
-                <div class="h-20 flex items-center px-4 border-b border-transparent">
-                    <a href="{{ url('/') }}">
+            <div class="flex justify-between items-center h-20">
+                
+                <div class="flex items-center">
+                    <a href="{{ url('/') }}" class="block hover:opacity-90 transition-opacity">
                         @include('layouts.partials.logo')
                     </a>
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="#jadwal" class="text-gray-600 hover:text-primary font-medium transition">Cek Jadwal</a>
-                    <a href="#" class="text-gray-600 hover:text-primary font-medium transition">Bantuan</a>
-                    
-                    <div class="h-6 w-px bg-gray-300 mx-2"></div>
-                    
                     @auth
-                        <a href="{{ route('dashboard') }}" class="bg-blue-50 text-primary font-bold px-5 py-2 rounded-lg transition duration-200 flex items-center">
-                            <i class="fa-solid fa-gauge mr-2"></i> Panel Saya
+                        <a href="{{ route('dashboard') }}" class="bg-teal-500/10 border border-teal-500/20 text-teal-600 font-extrabold px-5 py-2.5 rounded-xl transition-all hover:bg-teal-500/20 flex items-center text-sm shadow-sm">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 mr-2"></i> Portal Saya
                         </a>
                     @else
-                        <button onclick="openModal('loginModal')" class="text-primary font-semibold hover:bg-blue-50 px-5 py-2 rounded-lg transition duration-200">
+                        <button onclick="openModal('loginModal')" class="text-teal-600 font-extrabold text-sm hover:bg-teal-500/10 px-5 py-2.5 rounded-xl transition-all cursor-pointer">
                             Masuk
                         </button>
-                        <button onclick="openModal('registerModal')" class="bg-primary hover:bg-primaryDark text-white font-semibold px-5 py-2 rounded-lg shadow-sm transition duration-200">
+                        <button onclick="openModal('registerModal')" class="bg-gradient-to-r from-teal-400 to-cyan-500 text-slate-950 font-black text-sm px-6 py-2.5 rounded-xl shadow-md shadow-teal-500/10 hover:brightness-110 active:scale-95 transition-all cursor-pointer">
                             Daftar
                         </button>
                     @endauth
                 </div>
 
                 <div class="md:hidden flex items-center">
-                    <button class="text-gray-600 hover:text-primary focus:outline-none text-2xl">
-                        <i class="fa-solid fa-bars"></i>
+                    <button class="text-slate-700 hover:text-teal-600 focus:outline-none transition-colors">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="flex-1">
+    <main class="flex-1 pt-20 z-10 relative">
         @yield('content')
     </main>
 
-    <footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
+    <footer class="bg-white/40 border-t border-white/60 backdrop-blur-md text-slate-600 pt-16 pb-8 z-10 relative mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <div class="col-span-1 md:col-span-1">
-                    <div class="flex items-center mb-4">
+                <div class="space-y-4">
+                    <div class="flex items-center">
                         @include('layouts.partials.logo')
                     </div>
-                    <p class="text-sm text-gray-400 mb-4">Teman perjalanan Anda yang handal, menyediakan tiket transportasi terlengkap se-Indonesia.</p>
+                    <p class="text-xs text-slate-400 font-medium leading-relaxed">Teman perjalanan Anda yang handal, menyediakan tiket transportasi dengan aman dan nyaman.</p>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold mb-4">Produk</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-primary transition">Tiket Kereta Api</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Tiket Bus & Travel</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Tiket Pesawat</a></li>
+                    <h4 class="text-slate-900 font-extrabold text-sm mb-4 uppercase tracking-wider">Produk</h4>
+                    <ul class="space-y-2 text-xs font-semibold text-slate-500">
+                        <li><a href="#" class="hover:text-teal-600 transition-colors flex items-center">
+                            <span class="mr-1.5"><i data-lucide="train" class="w-4 h-4"></i></span> Tiket Kereta Api</a></li>
+                        <li><a href="#" class="hover:text-teal-600 transition-colors flex items-center">
+                            <span class="mr-1.5"><i data-lucide="bus" class="w-4 h-4"></i></span> Tiket Bus & Travel</a></li>
+                        <li><a href="#" class="hover:text-teal-600 transition-colors flex items-center">
+                            <span class="mr-1.5"><i data-lucide="plane-takeoff" class="w-4 h-4"></i></span> Tiket Pesawat</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold mb-4">Dukungan</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-primary transition">Pusat Bantuan</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Syarat & Ketentuan</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Kebijakan Privasi</a></li>
+                    <h4 class="text-slate-900 font-extrabold text-sm mb-4 uppercase tracking-wider">Dukungan</h4>
+                    <ul class="space-y-2 text-xs font-semibold text-slate-500">
+                        <li><a href="#" class="hover:text-teal-600 transition-colors flex items-center">
+                            <span class="mr-1.5"><i data-lucide="help-circle" class="w-4 h-4"></i></span> Pusat Bantuan</a></li>
+                        <li><a href="#" class="hover:text-teal-600 transition-colors flex items-center">
+                            <span class="mr-1.5"><i data-lucide="file-text" class="w-4 h-4"></i></span> Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="hover:text-teal-600 transition-colors flex items-center">
+                            <span class="mr-1.5"><i data-lucide="shield" class="w-4 h-4"></i></span> Kebijakan Privasi</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-bold mb-4">Ikuti Kami</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    <h4 class="text-slate-900 font-extrabold text-sm mb-4 uppercase tracking-wider">Ikuti Kami</h4>
+                    <div class="flex space-x-3">
+                        
+                        <a href="#" class="w-9 h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:bg-teal-500 hover:text-slate-950 hover:border-teal-500 shadow-sm transition-all group" title="Instagram">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:scale-110">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                            </svg>
+                        </a>
+
+                        <a href="#" class="w-9 h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:bg-teal-500 hover:text-slate-950 hover:border-teal-500 shadow-sm transition-all group" title="X (Twitter)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="transition-transform group-hover:scale-110">
+                                <path d="M12.6 .75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                            </svg>
+                        </a>
+
+                        <a href="#" class="w-9 h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:bg-teal-500 hover:text-slate-950 hover:border-teal-500 shadow-sm transition-all group" title="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:scale-110">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-                &copy; 2026 TiketKuy E-Ticketing System. All rights reserved.
+            <div class="border-t border-slate-200/60 pt-8 text-center text-xs text-slate-400 font-medium">
+                &copy; 2026 Travelgo E-Ticketing Transportasi. Dikembangkan oleh Mahasiswa Telkom University.
             </div>
         </div>
     </footer>
 
-    <div id="modalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    {{-- OVERLAY MODAL KACA INTERAKTIF --}}
+    <div id="modalOverlay" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         
-        <div id="loginModal" class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 hidden">
+        {{-- MODAL 1: MASUK (LOGIN) --}}
+        <div id="loginModal" class="bg-white/90 border border-white/60 backdrop-blur-md rounded-3xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 hidden">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Masuk</h3>
-                    <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                    <h3 class="text-xl font-black text-slate-800 tracking-tight">Masuk Akun</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf 
-                    <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                        <input type="email" name="email" required placeholder="Contoh: user@email.com" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition">
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex justify-between mb-2">
-                            <label class="block text-sm font-semibold text-gray-700">Password</label>
-                            <a href="#" class="text-sm text-primary hover:underline">Lupa password?</a>
-                        </div>
-                        <input type="password" name="password" required placeholder="Masukkan password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition">
-                    </div>
-                    <button type="submit" class="w-full bg-primary hover:bg-primaryDark text-white font-bold py-3 rounded-xl transition duration-200">Login</button>
-                </form>
-                <div class="mt-6 text-center text-sm text-gray-600">
-                    Belum punya akun? <a href="#" onclick="switchModal('registerModal')" class="text-primary font-bold hover:underline">Daftar sekarang</a>
-                </div>
-            </div>
-        </div>
-
-        <div id="registerModal" class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 hidden">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Daftar Akun</h3>
-                    <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
-                    <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                        <input type="text" name="name" required placeholder="Sesuai KTP/Identitas" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Alamat Email</label>
+                        <input type="email" name="email" required placeholder="user@email.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 font-bold focus:outline-none focus:border-teal-400 focus:bg-white transition-all">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                        <input type="email" name="email" required placeholder="Contoh: user@email.com" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition">
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Kata Sandi</label>
+                            <a href="#" class="text-xs font-bold text-teal-600 hover:text-teal-700">Lupa password?</a>
+                        </div>
+                        <input type="password" name="password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 font-bold focus:outline-none focus:border-teal-400 focus:bg-white transition-all">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Buat Password</label>
-                        <input type="password" name="password" required placeholder="Minimal 8 karakter" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition">
-                    </div>
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
-                        <input type="password" name="password_confirmation" required placeholder="Ulangi password Anda" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition">
-                    </div>
-                    <button type="submit" class="w-full bg-secondary hover:bg-secondaryDark text-white font-bold py-3 rounded-xl transition duration-200">Daftar</button>
+                    <button type="submit" class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 text-slate-950 font-black text-sm shadow-md shadow-teal-500/10 hover:brightness-110 active:scale-95 transition-all cursor-pointer">Login</button>
                 </form>
-                <div class="mt-6 text-center text-sm text-gray-600">
-                    Sudah punya akun? <a href="#" onclick="switchModal('loginModal')" class="text-primary font-bold hover:underline">Masuk di sini</a>
+                <div class="mt-6 text-center text-xs text-slate-400 font-semibold">
+                    Belum punya akun? <a href="#" onclick="switchModal('registerModal')" class="text-teal-600 font-black hover:text-teal-700 ml-0.5">Daftar sekarang</a>
                 </div>
             </div>
         </div>
 
-        <div id="detailModal" class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 hidden flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-start sticky top-0 bg-white z-10">
-                <div>
-                    <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">Tersedia</span>
-                    <h3 id="modalTransName" class="text-2xl font-bold text-gray-800">Nama Transportasi</h3>
-                    <p id="modalTransClass" class="text-gray-500 text-sm">Kelas Transportasi</p>
+        {{-- MODAL 2: DAFTAR AKUN --}}
+        <div id="registerModal" class="bg-white/90 border border-white/60 backdrop-blur-md rounded-3xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-black text-slate-800 tracking-tight">Daftar Akun Baru</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 text-2xl bg-gray-50 rounded-full w-10 h-10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+                <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                    @csrf
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Nama Lengkap</label>
+                        <input type="text" name="name" required placeholder="Sesuai KTP / Identitas" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 font-bold focus:outline-none focus:border-teal-400 focus:bg-white transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Alamat Email</label>
+                        <input type="email" name="email" required placeholder="user@email.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 font-bold focus:outline-none focus:border-teal-400 focus:bg-white transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Buat Password</label>
+                        <input type="password" name="password" required placeholder="Minimal 8 karakter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 font-bold focus:outline-none focus:border-teal-400 focus:bg-white transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" required placeholder="Ulangi password Anda" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 font-bold focus:outline-none focus:border-teal-400 focus:bg-white transition-all">
+                    </div>
+                    <button type="submit" class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-black text-sm shadow-md shadow-orange-500/10 hover:brightness-110 active:scale-95 transition-all cursor-pointer">Daftar Sekarang</button>
+                </form>
+                <div class="mt-6 text-center text-xs text-slate-400 font-semibold">
+                    Sudah punya akun? <a href="#" onclick="switchModal('loginModal')" class="text-teal-600 font-black hover:text-teal-700 ml-0.5">Masuk di sini</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- MODAL 3: DETAIL FASILITAS & MANIFEST JADWAL --}}
+        <div id="detailModal" class="bg-white/95 border border-white/60 backdrop-blur-md rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 hidden flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-start sticky top-0 bg-white/80 backdrop-blur-md z-10">
+                <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold mb-2">Tersedia</span>
+                    <h3 id="modalTransName" class="text-xl font-black text-slate-800 tracking-tight">Nama Transportasi</h3>
+                    <p id="modalTransClass" class="text-slate-400 text-xs font-semibold mt-0.5">Kelas Transportasi</p>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 text-xl bg-slate-50 border border-slate-200/60 rounded-full w-9 h-9 flex items-center justify-center transition-colors cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             
-            <div class="p-6 overflow-y-auto">
-                <div class="bg-blue-50 rounded-xl p-5 mb-6 relative">
-                    <div class="absolute left-7 top-10 bottom-10 w-0.5 bg-blue-300 border-dashed border-l-2"></div>
+            <div class="p-6 overflow-y-auto space-y-6 hide-scroll">
+                {{-- Alur Timeline Jalur Perjalanan --}}
+                <div class="bg-teal-500/5 border border-teal-500/10 rounded-2xl p-5 relative">
+                    <div class="absolute left-7 top-10 bottom-10 w-0.5 bg-dashed bg-teal-300"></div>
                     
                     <div class="flex relative mb-8">
-                        <div class="w-4 h-4 rounded-full bg-primary mt-1 mr-4 ring-4 ring-blue-100 relative z-10"></div>
+                        <div class="w-4 h-4 rounded-full bg-teal-500 mt-1 mr-4 ring-4 ring-teal-100 relative z-10 shadow-sm"></div>
                         <div>
-                            <p class="font-bold text-gray-800">Jam Operasional</p>
-                            <p class="text-gray-600 text-sm" id="modalTransAsal">Keberangkatan</p>
+                            <p class="font-black text-sm text-slate-800">Jam Operasional Keberangkatan</p>
+                            <p class="text-slate-400 text-xs font-medium mt-0.5" id="modalTransAsal">Keberangkatan</p>
                         </div>
                     </div>
                     
                     <div class="flex relative">
-                        <div class="w-4 h-4 rounded-full border-2 border-secondary bg-white mt-1 mr-4 ring-4 ring-orange-50 relative z-10"></div>
+                        <div class="w-4 h-4 rounded-full border-2 border-orange-500 bg-white mt-1 mr-4 ring-4 ring-orange-50 relative z-10 shadow-sm"></div>
                         <div>
-                            <p class="font-bold text-gray-800">Estimasi Tiba</p>
-                            <p class="text-gray-600 text-sm" id="modalTransTujuan">Tujuan</p>
+                            <p class="font-black text-sm text-slate-800">Estimasi Jam Tiba di Tujuan</p>
+                            <p class="text-slate-400 text-xs font-medium mt-0.5" id="modalTransTujuan">Tujuan</p>
                         </div>
                     </div>
                 </div>
 
-                <h4 class="font-bold text-gray-800 mb-4">Fasilitas Kendaraan</h4>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                    <div class="text-center p-3 border rounded-xl bg-gray-50">
-                        <i class="fa-solid fa-snowflake text-primary text-xl mb-2"></i>
-                        <p class="text-xs text-gray-600">Full AC</p>
-                    </div>
-                    <div class="text-center p-3 border rounded-xl bg-gray-50">
-                        <i class="fa-solid fa-utensils text-primary text-xl mb-2"></i>
-                        <p class="text-xs text-gray-600">Makan/Snack</p>
-                    </div>
-                    <div class="text-center p-3 border rounded-xl bg-gray-50">
-                        <i class="fa-solid fa-wifi text-primary text-xl mb-2"></i>
-                        <p class="text-xs text-gray-600">Free WiFi</p>
-                    </div>
-                    <div class="text-center p-3 border rounded-xl bg-gray-50">
-                        <i class="fa-solid fa-plug text-primary text-xl mb-2"></i>
-                        <p class="text-xs text-gray-600">Stop Kontak</p>
+                {{-- Grid Fasilitas Luminescent --}}
+                <div class="space-y-2.5">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider">Fasilitas Kendaraan</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="text-center p-3.5 border border-slate-100 rounded-2xl bg-slate-50/50 shadow-sm flex flex-col items-center justify-center">
+                            <i data-lucide="snowflake" class="text-teal-500 w-5 h-5 mb-2"></i>
+                            <p class="text-xs text-slate-600 font-bold">Full AC</p>
+                        </div>
+                        <div class="text-center p-3.5 border border-slate-100 rounded-2xl bg-slate-50/50 shadow-sm flex flex-col items-center justify-center">
+                            <i data-lucide="utensils" class="text-teal-500 w-5 h-5 mb-2"></i>
+                            <p class="text-xs text-slate-600 font-bold">Makan / Snack</p>
+                        </div>
+                        <div class="text-center p-3.5 border border-slate-100 rounded-2xl bg-slate-50/50 shadow-sm flex flex-col items-center justify-center">
+                            <i data-lucide="wifi" class="text-teal-500 w-5 h-5 mb-2"></i>
+                            <p class="text-xs text-slate-600 font-bold">Free WiFi</p>
+                        </div>
+                        <div class="text-center p-3.5 border border-slate-100 rounded-2xl bg-slate-50/50 shadow-sm flex flex-col items-center justify-center">
+                            <i data-lucide="plug" class="text-teal-500 w-5 h-5 mb-2"></i>
+                            <p class="text-xs text-slate-600 font-bold">Stop Kontak</p>
+                        </div>
                     </div>
                 </div>
 
-                <h4 class="font-bold text-gray-800 mb-2">Kebijakan Penumpang</h4>
-                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    <li>Wajib membawa identitas asli (KTP/SIM/Paspor).</li>
-                    <li>Tiba di titik keberangkatan minimal 30 menit sebelum berangkat.</li>
-                    <li>Tiket dapat dibatalkan (syarat & ketentuan berlaku).</li>
-                </ul>
+                {{-- Kebijakan Penumpang --}}
+                <div class="space-y-2.5">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider">Kebijakan Penumpang</h4>
+                    <ul class="list-none text-xs text-slate-500 font-medium space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <li class="flex items-start"><span class="text-teal-500 font-bold mr-2">✓</span> Wajib membawa identitas asli resmi (KTP/SIM/Paspor) saat check-in.</li>
+                        <li class="flex items-start"><span class="text-teal-500 font-bold mr-2">✓</span> Tiba di terminal / stasiun keberangkatan minimal 30 menit sebelum jam berangkat.</li>
+                        <li class="flex items-start"><span class="text-teal-500 font-bold mr-2">✓</span> Tiket resmi dapat dibatalkan atau refund otomatis lewat panel kontrol penumpang.</li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-between items-center mt-auto">
+            {{-- Bagian Tarif Bawah --}}
+            <div class="p-5 border-t border-slate-100 bg-slate-50/80 backdrop-blur-md flex justify-between items-center mt-auto">
                 <div>
-                    <p class="text-sm text-gray-500">Harga Per Orang</p>
-                    <p id="modalTransPrice" class="text-2xl font-bold text-secondary">Rp 0</p>
+                    <p class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Harga Per Orang</p>
+                    <p id="modalTransPrice" class="text-xl font-black text-orange-500">Rp 0</p>
                 </div>
                 @auth
-                    <a href="{{ route('passenger.dashboard') }}" class="bg-secondary hover:bg-secondaryDark text-white font-bold py-3 px-8 rounded-xl shadow-md transition duration-200">
-                        Pesan Sekarang
+                    <a href="{{ route('passenger.dashboard') }}" class="inline-flex items-center space-x-1.5 bg-gradient-to-r from-teal-400 to-cyan-500 text-slate-950 font-black text-xs px-6 py-3 rounded-xl shadow-md shadow-teal-500/10 hover:brightness-110 active:scale-95 transition-all">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <span>Pesan Sekarang</span>
                     </a>
                 @else
-                    <button onclick="switchModal('loginModal')" class="bg-secondary hover:bg-secondaryDark text-white font-bold py-3 px-8 rounded-xl shadow-md transition duration-200">
+                    <button onclick="switchModal('loginModal')" class="bg-gradient-to-r from-orange-500 to-red-500 text-white font-black text-xs px-6 py-3 rounded-xl shadow-md shadow-orange-500/10 hover:brightness-110 active:scale-95 transition-all cursor-pointer">
                         Pilih Tiket
                     </button>
                 @endauth
@@ -253,12 +278,9 @@
 
     </div>
 
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 10) { nav.classList.add('shadow-md'); } 
-            else { nav.classList.remove('shadow-md'); }
-        });
+        lucide.createIcons();
 
         let currentOpenModal = null;
 
@@ -277,7 +299,7 @@
                 overlay.classList.remove('opacity-0');
                 modal.classList.remove('scale-95', 'opacity-0');
                 modal.classList.add('scale-100', 'opacity-100');
-            }, 10);
+            }, 20);
             
             currentOpenModal = modal;
         }

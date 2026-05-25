@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Travelgo App",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/screens/home_screen.dart" 
+        }
+    ]
+}

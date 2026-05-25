@@ -31,12 +31,14 @@
     <div class="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-violet-600/20 blur-[150px] pointer-events-none z-0"></div>
     <div class="absolute top-[30%] right-[20%] w-[400px] h-[400px] rounded-full bg-amber-400/10 blur-[120px] pointer-events-none z-0"></div>
 
-    <aside class="w-72 bg-slate-950/60 backdrop-blur-xl border-r border-slate-800/40 min-h-screen flex flex-col justify-between p-6 z-10 relative">
-        <div>
-            <a href="{{ route('admin.dashboard') }}" class="block hover:opacity-90 transition-opacity">
-                <div class="flex items-center space-x-3 mb-8 px-2">
+    <aside class="w-72 bg-slate-950/60 backdrop-blur-xl border-r border-slate-800/40 h-screen flex flex-col justify-between p-6 z-10 relative">
+    
+        <div class="flex-1 flex flex-col min-h-0 overflow-y-auto hide-scroll space-y-8">
+            
+            <a href="{{ route('admin.dashboard') }}" class="block hover:opacity-90 transition-opacity flex-shrink-0">
+                <div class="flex items-center space-x-3 px-2">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/30">
-                        <i data-lucide="compass" class="w-6 h-6 text-slate-950"></i>
+                        <i data-lucide="tickets" class="w-6 h-6 text-slate-950"></i>
                     </div>
                     <div>
                         <div class="flex items-center space-x-1">
@@ -48,11 +50,11 @@
                 </div>
             </a>
 
-            <div class="mb-8 p-3 bg-slate-900/40 rounded-xl border border-slate-800/50 flex items-center space-x-3">
+            <div class="p-3 bg-slate-900/40 rounded-xl border border-slate-800/50 flex items-center space-x-3 flex-shrink-0">
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=1BA0E2&color=fff" alt="Admin Avatar" class="w-10 h-10 rounded-full shadow-sm">
                 <div class="min-w-0 flex-1">
                     <p class="text-[10px] text-slate-400 font-medium">Masuk Sebagai</p>
-                    <h4 class="text-sm font-bold text-slate-100 truncate">{{ explode(' ', Auth::user()->name)[0] }}</h4>
+                    <h4 class="text-sm font-bold text-slate-100 truncate">{{ implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)) }}</h4>
                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold bg-teal-500/10 text-teal-300 mt-1">
                         <span class="w-1.5 h-1.5 rounded-full bg-teal-400 mr-1 animate-pulse"></span>
                         Administrator
@@ -60,45 +62,56 @@
                 </div>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-6 pb-4">
+                {{-- Main Menu --}}
                 <div>
                     <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mb-3 px-3">Main Menu</span>
                     <nav class="space-y-1">
-                        <a href="{{ route('admin.dashboard') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500/15 to-teal-500/5 text-teal-400 border-l-4 border-teal-400 transition-all">
+                        <a href="{{ route('admin.dashboard') }}" 
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm transition-all {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-teal-500/15 to-teal-500/5 text-teal-400 border-l-4 border-teal-400 font-bold' : 'text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 font-medium' }}">
                             <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
                             <span>Dashboard</span>
                         </a>
                     </nav>
                 </div>
 
+                {{-- Manajemen Data --}}
                 <div>
                     <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mb-3 px-3">Manajemen Data</span>
                     <nav class="space-y-1">
-                        <a href="{{ route('admin.transportations.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
+                        {{-- Transportasi --}}
+                        <a href="{{ route('admin.transportations.index') }}" 
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm transition-all {{ request()->routeIs('admin.transportations.*') ? 'bg-gradient-to-r from-teal-500/15 to-teal-500/5 text-teal-400 border-l-4 border-teal-400 font-bold' : 'text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 font-medium' }}">
                             <i data-lucide="bus" class="w-4.5 h-4.5"></i>
                             <span>Transportasi</span>
                         </a>
-                        <a href="{{ route('admin.routes.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
+
+                        {{-- Rute Perjalanan --}}
+                        <a href="{{ route('admin.routes.index') }}" 
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm transition-all {{ request()->routeIs('admin.routes.*') ? 'bg-gradient-to-r from-teal-500/15 to-teal-500/5 text-teal-400 border-l-4 border-teal-400 font-bold' : 'text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 font-medium' }}">
                             <i data-lucide="map-pin" class="w-4.5 h-4.5"></i>
                             <span>Rute Perjalanan</span>
                         </a>
-                        <a href="{{ route('admin.schedule.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
+
+                        {{-- Jadwal --}}
+                        <a href="{{ route('admin.schedule.index') }}" 
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm transition-all {{ request()->routeIs('admin.schedule.*') ? 'bg-gradient-to-r from-teal-500/15 to-teal-500/5 text-teal-400 border-l-4 border-teal-400 font-bold' : 'text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 font-medium' }}">
                             <i data-lucide="calendar" class="w-4.5 h-4.5"></i>
                             <span>Jadwal</span>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
-                            <div class="flex items-center space-x-3">
+
+                        {{-- Tiket & Pesanan --}}
+                        <a href="{{ route('admin.orders.index') }}" 
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm transition-all {{ request()->routeIs('admin.orders.*') ? 'bg-gradient-to-r from-teal-500/15 to-teal-500/5 text-teal-400 border-l-4 border-teal-400 font-bold' : 'text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 font-medium' }}">
                                 <i data-lucide="ticket" class="w-4.5 h-4.5"></i>
                                 <span>Tiket & Pesanan</span>
-                            </div>
-                            <span class="bg-amber-500/10 text-amber-400 text-[10px] px-2 py-0.5 rounded-full font-bold">Baru</span>
                         </a>
                     </nav>
                 </div>
             </div>
         </div>
 
-        <div class="pt-6 border-t border-slate-800/60">
+        <div class="pt-4 border-t border-slate-800/60 flex-shrink-0">
             <button onclick="toggleModal('modal-logout', true)" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer">
                 <i data-lucide="log-out" class="w-4.5 h-4.5"></i>
                 <span>Keluar Sistem</span>
@@ -106,7 +119,7 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col min-h-screen z-10 relative overflow-y-auto">
+    <main class="flex-1 flex flex-col h-screen z-10 relative overflow-y-auto">
         
         <header class="h-20 border-b border-slate-800/40 bg-slate-950/40 backdrop-blur-md px-8 flex items-center justify-between">
             <div class="relative w-96">
@@ -189,6 +202,21 @@
             toast.classList.remove('hidden');
             setTimeout(() => { toast.classList.add('hidden'); }, 3000);
         }
+
+        // Pemicu Otomatis Toast Berdasarkan Halaman yang Sedang Aktif Saat Ini
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(request()->routeIs('admin.dashboard'))
+                showToast('Berhasil masuk ke Dashboard Utama');
+            @elseif(request()->routeIs('admin.transportations.*'))
+                showToast('Berhasil memuat Data Transportasi');
+            @elseif(request()->routeIs('admin.routes.*'))
+                showToast('Berhasil memuat Manajemen Rute Perjalanan');
+            @elseif(request()->routeIs('admin.schedule.*'))
+                showToast('Berhasil memuat Manajemen Jadwal Perjalanan');
+            @elseif(request()->routeIs('admin.orders.*'))
+                showToast('Berhasil memuat Manajemen Tiket & Pesanan');
+            @endif
+        });
     </script>
     
     @stack('scripts')

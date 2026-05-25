@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +49,7 @@ class AuthController extends Controller
         ]);
 
         // 2. Simpan ke database
-        $user = User.create([
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
@@ -55,7 +57,7 @@ class AuthController extends Controller
         ]);
 
         // 3. Buat token akses agar setelah daftar bisa langsung login otomatis
-        $token = $user->createToken('auth_token').plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'status' => 'sukses',

@@ -69,7 +69,7 @@
                                 @elseif($item->jenis == 'bus')
                                     <i data-lucide="bus" class="text-teal-400 mr-2 w-4 h-4"></i> Bus
                                 @else
-                                    <i data-lucide="plane" class="text-teal-400 mr-2 w-4 h-4"></i> Pesawat
+                                    <i data-lucide="plane-takeoff" class="text-teal-400 mr-2 w-4 h-4"></i> Pesawat
                                 @endif
                             </div>
                             <span class="text-xs text-slate-500 mt-1 block font-medium">{{ $item->kelas }}</span>

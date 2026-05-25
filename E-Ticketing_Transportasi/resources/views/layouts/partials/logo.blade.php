@@ -15,7 +15,7 @@
     .brand-star-global {
         width: 18px;
         height: 18px;
-        fill: #FF5E1F; 
+        fill: #1fffff; 
     }
 </style>
 

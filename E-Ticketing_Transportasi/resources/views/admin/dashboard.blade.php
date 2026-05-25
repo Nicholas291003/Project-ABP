@@ -91,9 +91,13 @@
                                 <div class="font-bold text-slate-200 text-xs">{{ $pesanan->schedule->route->kota_asal }} → {{ $pesanan->schedule->route->kota_tujuan }}</div>
                                 <div class="text-[11px] text-slate-400 mt-1">
                                     <span class="text-teal-400">
-                                        @if($pesanan->schedule->transportation->jenis == 'kereta') 🚄 
-                                        @elseif($pesanan->schedule->transportation->jenis == 'bus') 🚌 
-                                        @else ✈️ @endif
+                                        @if($pesanan->schedule->transportation->jenis == 'kereta')
+                                        <i data-lucide="train" class="w-3.5 h-3.5"></i> 
+                                        @elseif($pesanan->schedule->transportation->jenis == 'bus')
+                                        <i data-lucide="bus" class="w-3.5 h-3.5"></i> 
+                                        @else
+                                        <i data-lucide="plane-takeoff" class="w-3.5 h-3.5"></i> 
+                                        @endif
                                     </span> 
                                     {{ $pesanan->schedule->transportation->nama }}
                                 </div>
@@ -176,7 +180,7 @@
                     <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 opacity-60">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-bold text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-md">{{ \Carbon\Carbon::parse($jadwal->departure_date)->format('d M y') }}</span>
-                            <span class="text-[11px] text-slate-500 font-bold line-through">Selesai</span>
+                            <span class="text-[11px] text-slate-500 font-bold ">Selesai</span>
                         </div>
                         <h3 class="text-sm font-black text-slate-400">{{ $jadwal->transportation->nama }}</h3>
                         <p class="text-xs text-slate-500 mt-0.5">{{ $jadwal->route->kota_asal }} → {{ $jadwal->route->kota_tujuan }}</p>
