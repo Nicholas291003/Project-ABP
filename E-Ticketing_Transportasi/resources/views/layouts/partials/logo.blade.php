@@ -12,16 +12,25 @@
         text-transform: uppercase;
         line-height: 1;
     }
-    .brand-star-global {
-        width: 18px;
-        height: 18px;
-        fill: #1fffff; 
-    }
 </style>
 
 <div class="brand-container">
     <h1 class="brand-text-global">TRAVELG</h1> 
-    <svg class="brand-star-global" viewBox="0 0 24 24">
-        <path d="M12,2L14.8,9.2L22,12L14.8,14.8L12,22L9.2,14.8L2,12L9.2,9.2Z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-5 h-5">
+      <style>
+        @keyframes shake {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(-15deg) scale(1.1); }
+          50% { transform: rotate(0deg) scale(1); }
+          75% { transform: rotate(15deg) scale(1.1); }
+        }
+        .star-logo {
+          fill: #2dd4bf; /* Warna teal-400 standar Tailwind */
+          transform-origin: center;
+          animation: shake 1.5s infinite ease-in-out;
+        }
+      </style>
+      <path class="star-logo" d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z"/>
     </svg>
 </div>
+

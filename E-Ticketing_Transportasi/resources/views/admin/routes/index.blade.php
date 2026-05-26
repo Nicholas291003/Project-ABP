@@ -57,16 +57,37 @@
     </div>
 
     {{-- Form Pencarian & Filter Bilah Kaca --}}
-    <form action="{{ route('admin.routes.index') }}" method="GET" class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 p-4 rounded-t-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div class="flex space-x-2 w-full sm:w-auto">
-            <select name="filter_asal" onchange="this.form.submit()" class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all cursor-pointer">
+    <form action="{{ route('admin.routes.index') }}" method="GET" class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 p-4 rounded-t-2xl flex flex-col lg:flex-row justify-between items-center gap-4">
+        <div class="flex flex-col sm:flex-row flex-wrap gap-2 w-full lg:w-auto">
+            
+            {{-- Dropdown 1: Filter Kota Asal --}}
+            <select name="filter_asal" onchange="this.form.submit()" class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all cursor-pointer w-full sm:w-auto">
                 <option value="">Semua Kota Asal</option>
                 @foreach($list_kota_asal as $kota)
                     <option value="{{ $kota }}" {{ request('filter_asal') == $kota ? 'selected' : '' }}>{{ $kota }}</option>
                 @endforeach
             </select>
+
+            {{-- Dropdown 2: Filter Semua Kota Tujuan --}}
+            <select name="filter_tujuan" onchange="this.form.submit()" class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all cursor-pointer w-full sm:w-auto">
+                <option value="">Semua Kota Tujuan</option>
+                @foreach($list_kota_tujuan as $kota)
+                    <option value="{{ $kota }}" {{ request('filter_tujuan') == $kota ? 'selected' : '' }}>{{ $kota }}</option>
+                @endforeach
+            </select>
+
+            {{-- Dropdown 3: Filter Jenis Transportasi --}}
+            <select name="filter_transportasi" onchange="this.form.submit()" class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all cursor-pointer w-full sm:w-auto">
+                <option value="">Semua Transportasi</option>
+                <option value="kereta" {{ request('filter_transportasi') == 'kereta' ? 'selected' : '' }}>Kereta Api</option>
+                <option value="bus" {{ request('filter_transportasi') == 'bus' ? 'selected' : '' }}>Bus & Travel</option>
+                <option value="pesawat" {{ request('filter_transportasi') == 'pesawat' ? 'selected' : '' }}>Pesawat</option>
+            </select>
+
         </div>
-        <div class="relative w-full sm:w-72">
+
+        {{-- Input Pencarian Kata Kunci Teks --}}
+        <div class="relative w-full lg:w-72">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
                 <i data-lucide="search" class="w-4 h-4"></i>
             </div>

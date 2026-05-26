@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Pesan Tiket Transportasi Online') - Travelgo</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+        <path fill='%232dd4bf' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>">
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
@@ -343,6 +344,26 @@
             document.getElementById('modalTransPrice').innerText = price;
             openModal('detailModal');
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    
+            // === 1. SCRIPT ANIMASI FAVICON GOYANG ===
+            const favicon = document.getElementById('favicon');
+            if (favicon) {
+            const frames = [
+                "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>",
+                "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' transform='rotate(-15 50 50)' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>",
+                "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' transform='rotate(15 50 50)' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>"
+            ];
+            let currentFrame = 0;
+            let sequence = [0, 1, 0, 2];
+
+            setInterval(() => {
+                favicon.href = frames[sequence[currentFrame]];
+                currentFrame = (currentFrame + 1) % sequence.length;
+            }, 300);
+            }
+        });
 
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
             if(e.target === this) closeModal();

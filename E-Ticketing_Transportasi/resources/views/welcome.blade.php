@@ -83,6 +83,7 @@
                     <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:brightness-110 active:scale-95 transition-all text-sm font-extrabold text-white flex items-center justify-center space-x-2 shadow-lg shadow-orange-500/20 cursor-pointer h-[42px]">
                         <i data-lucide="search" class="w-4.5 h-4.5 stroke-[3px]"></i>
                         <span>Cari Tiket</span>
+                        
                     </button>
                 </div>
             </form>
@@ -140,11 +141,24 @@
                                 </div>
                             </div>
                         </div>
-                    @empty
-                        {{-- Hasil Kosong --}}
-                        <div class="col-span-1 sm:col-span-2 lg:col-span-4 bg-white/80 border border-white/50 backdrop-blur-md rounded-3xl p-12 text-center h-56 flex flex-col items-center justify-center">
-                            <i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-3 text-slate-300"></i>
-                            <p class="text-slate-500 font-bold text-sm">Maaf, jadwal tiket tidak ditemukan atau sudah habis.</p>
+                   @empty
+                        {{-- Hasil Kosong Kustom (Sudah Sinkron Tema & Variabel) --}}
+                        <div class="col-span-1 sm:col-span-2 lg:col-span-4 bg-white/80 border border-slate-100 backdrop-blur-md rounded-3xl p-10 flex flex-col items-center justify-center text-center max-w-xl mx-auto space-y-4 shadow-xl shadow-zinc-100/30 my-4">
+                            
+                            <div class="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center border border-orange-500/20 text-orange-500 shadow-lg shadow-orange-500/5">
+                                <i data-lucide="search-x" class="w-8 h-8 stroke-[2px]"></i>
+                            </div>
+                            
+                            <div class="space-y-1.5">
+                                <h3 class="text-lg font-black text-slate-800 tracking-wide">Tiket Tidak Ditemukan</h3>
+                                <p class="text-sm text-slate-400 max-w-sm mx-auto leading-relaxed font-medium">
+                                    Maaf, jadwal perjalanan atau tiket yang Anda cari saat ini tidak tersedia. Silakan coba ubah tanggal atau rute pencarian Anda.
+                                </p>
+                            </div>
+
+                            <a href="{{ url('/') }}" class="mt-2 text-xs font-bold text-orange-500 hover:text-orange-600 transition-colors underline underline-offset-4 cursor-pointer">
+                                Reset Pencarian
+                            </a>
                         </div>
                     @endforelse
                 </div>

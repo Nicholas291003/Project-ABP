@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Penumpang') - Travelgo</title>
     
-    <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+        <path fill='%232dd4bf' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <style>
@@ -34,9 +35,26 @@
                             <i data-lucide="tickets" class="w-6 h-6 text-white"></i>
                         </div>
                         <div>
+                            <style>
+                            @keyframes shake {
+                                0%, 100% { transform: rotate(0deg) scale(1); }
+                                25% { transform: rotate(-5deg) scale(1.1); }
+                                50% { transform: rotate(0deg) scale(1); }
+                                75% { transform: rotate(5deg) scale(1.1); }
+                            }
+                            .animate-star {
+                                transform-origin: 50px 50px;
+                                transform-box: fill-box;
+                                animation: shake 2s infinite ease-in-out;
+                            }
+                        </style>
+
                             <div class="flex items-center space-x-1">
-                                <span class="text-xl font-extrabold text-slate-900 tracking-wider">TRAVELGO</span>
-                                <span class="text-teal-500 text-lg font-black">✦</span>
+                                <span class="text-xl font-black text-black tracking-wider">TRAVELG</span>
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-5 h-5 animate-star">
+                                    <path fill="#2dd4bf" d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z"/>
+                                </svg>
                             </div>
                             <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase">Penumpang</p>
                         </div>
@@ -143,8 +161,32 @@
             }
         }
 
-        // Jalankan pemicu otomatis
+        // Jalankan pemicu otomatis saat halaman selesai dimuat
         document.addEventListener('DOMContentLoaded', function() {
+            
+            // ==========================================
+            // 1. BAGIAN ANIMASI FAVICON (GOYANG HALUS & SANTAI)
+            // ==========================================
+            const favicon = document.getElementById('favicon');
+            if (favicon) {
+                const frames = [
+                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>",
+                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' transform='rotate(-10 50 50)' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>",
+                    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' transform='rotate(10 50 50)' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>"
+                ];
+                let currentFrame = 0;
+                let sequence = [0, 1, 0, 2];
+
+                // Waktu diatur 500ms agar perpindahan animasi melambat
+                setInterval(() => {
+                    favicon.href = frames[sequence[currentFrame]];
+                    currentFrame = (currentFrame + 1) % sequence.length;
+                }, 500); 
+            }
+
+            // ==========================================
+            // 2. BAGIAN PEMICU TOAST BLADE (KODE LAMA ANDA)
+            // ==========================================
             @if(request()->routeIs('passenger.dashboard'))
                 showToast('Selamat datang kembali di Travelgo!');
             @elseif(request()->routeIs('passenger.tickets'))
@@ -158,7 +200,7 @@
             @elseif(request()->routeIs('passenger.search'))
                 showToast('Berhasil menemukan Jadwal Keberangkatan');
             @else
-                // Fallback jika nama route tidak pas di atas, dia akan tetap muncul memberi tahu nama route saat ini
+                // Fallback jika nama route tidak pas di atas
                 showToast('Berhasil memuat halaman');
             @endif
         });

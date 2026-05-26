@@ -11,10 +11,32 @@ class TransportationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil data terbaru dengan pagination (10 per halaman)
-        $transportations = Transportation::latest()->paginate(10);
+        $query = Transportation::query();
+
+        // 1. Filter Berdasarkan Jenis Kendaraan
+        if ($request->filled('filter_jenis')) {
+            $query->where('jenis', $request->filter_jenis);
+        }
+
+        // 2. PERBAIKAN: Gunakan LIKE agar kata "Ekonomi" bisa menyaring data "Eksekutif & Ekonomi Premium"
+        if ($request->filled('filter_kelas')) {
+            $query->where('kelas', 'LIKE', "%" . $request->filter_kelas . "%");
+        }
+
+        // 3. Filter Berdasarkan Teks Pencarian Nama/Kode
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'LIKE', "%{$search}%")
+                ->orWhere('kode', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Ambil hasil akhir dengan paginasi terikat query string
+        $transportations = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.transportations.index', compact('transportations'));
     }
 

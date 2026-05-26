@@ -26,22 +26,36 @@
     </div>
 
     {{-- Filter & Pencarian Kontrol Kaca --}}
-    <div class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 p-4 rounded-t-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+    <form action="{{ route('admin.transportations.index') }}" method="GET" class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 p-4 rounded-t-2xl flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
         <div class="flex space-x-2 w-full sm:w-auto">
-            <select class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all">
+            
+            {{-- Dropdown Jenis Transportasi --}}
+            <select name="filter_jenis" onchange="this.form.submit()" class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all cursor-pointer">
                 <option value="">Semua Jenis</option>
-                <option value="kereta">Kereta Api</option>
-                <option value="bus">Bus / Travel</option>
-                <option value="pesawat">Pesawat</option>
+                <option value="kereta" {{ request('filter_jenis') == 'kereta' ? 'selected' : '' }}>Kereta Api</option>
+                <option value="bus" {{ request('filter_jenis') == 'bus' ? 'selected' : '' }}>Bus / Travel</option>
+                <option value="pesawat" {{ request('filter_jenis') == 'pesawat' ? 'selected' : '' }}>Pesawat</option>
             </select>
+
+            {{-- Dropdown Pilihan Kelas (Disamakan dengan Teks di Database Anda) --}}
+            <select name="filter_kelas" onchange="this.form.submit()" class="bg-slate-900 border border-slate-800 text-slate-300 text-sm rounded-xl focus:outline-none focus:border-teal-400 px-3 py-2 transition-all cursor-pointer">
+                <option value="">Semua Kelas</option>
+                <option value="Ekonomi" {{ request('filter_kelas') == 'Ekonomi' ? 'selected' : '' }}>Ekonomi</option>
+                <option value="Bisnis" {{ request('filter_kelas') == 'Bisnis' ? 'selected' : '' }}>Bisnis</option>
+                <option value="Eksekutif" {{ request('filter_kelas') == 'Eksekutif' ? 'selected' : '' }}>Eksekutif</option>
+                <option value="Luxury" {{ request('filter_kelas') == 'Luxury' ? 'selected' : '' }}>Luxury</option>
+            </select>
+
         </div>
+
+        {{-- Kolom Input Teks Pencarian --}}
         <div class="relative w-full sm:w-72">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
                 <i data-lucide="search" class="w-4 h-4"></i>
             </div>
-            <input type="text" class="w-full bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400 pl-10 p-2.5 transition-all" placeholder="Cari nama atau kode...">
+            <input type="text" name="search" value="{{ request('search') }}" class="w-full bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400 pl-10 p-2.5 transition-all" placeholder="Cari nama atau kode...">
         </div>
-    </div>
+    </form>
 
     {{-- Tabel Data Utama --}}
     <div class="bg-slate-950/40 backdrop-blur-md border border-slate-800/80 rounded-b-2xl overflow-hidden shadow-xl shadow-black/10">

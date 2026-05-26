@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Travelgo Admin Dashboard')</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+        <path fill='%232dd4bf' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,10 +42,27 @@
                         <i data-lucide="tickets" class="w-6 h-6 text-slate-950"></i>
                     </div>
                     <div>
-                        <div class="flex items-center space-x-1">
-                            <span class="text-xl font-black text-white tracking-wider">TRAVELG</span>
-                            <span class="text-teal-400 text-lg font-black">✦</span>
-                        </div>
+                        <style>
+                            @keyframes shake {
+                                0%, 100% { transform: rotate(0deg) scale(1); }
+                                25% { transform: rotate(-5deg) scale(1.1); }
+                                50% { transform: rotate(0deg) scale(1); }
+                                75% { transform: rotate(5deg) scale(1.1); }
+                            }
+                            .animate-star {
+                                transform-origin: 50px 50px;
+                                transform-box: fill-box;
+                                animation: shake 2s infinite ease-in-out;
+                            }
+                        </style>
+
+                            <div class="flex items-center space-x-1">
+                                <span class="text-xl font-black text-white tracking-wider">TRAVELG</span>
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-5 h-5 animate-star">
+                                    <path fill="#2dd4bf" d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z"/>
+                                </svg>
+                            </div>
                         <p class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">E-Ticketing System</p>
                     </div>
                 </div>
@@ -188,35 +206,56 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        lucide.createIcons();
+    lucide.createIcons();
 
-        function toggleModal(id, show) {
-            const modal = document.getElementById(id);
-            if(show) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+    function toggleModal(id, show) {
+        const modal = document.getElementById(id);
+        if(show) modal.classList.remove('hidden');
+        else modal.classList.add('hidden');
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-message').innerText = message;
+        toast.classList.remove('hidden');
+        setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+    }
+
+    // Pemicu Otomatis Saat Halaman Selesai Dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // === 1. SCRIPT ANIMASI FAVICON GOYANG ===
+        const favicon = document.getElementById('favicon');
+        if (favicon) {
+        const frames = [
+            "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>",
+            "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' transform='rotate(-15 50 50)' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>",
+            "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path fill='%232dd4bf' transform='rotate(15 50 50)' d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z'/></svg>"
+        ];
+        let currentFrame = 0;
+        let sequence = [0, 1, 0, 2];
+
+        setInterval(() => {
+            favicon.href = frames[sequence[currentFrame]];
+            currentFrame = (currentFrame + 1) % sequence.length;
+        }, 600);
         }
 
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('hidden');
-            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
-        }
 
-        // Pemicu Otomatis Toast Berdasarkan Halaman yang Sedang Aktif Saat Ini
-        document.addEventListener('DOMContentLoaded', function() {
-            @if(request()->routeIs('admin.dashboard'))
-                showToast('Berhasil masuk ke Dashboard Utama');
-            @elseif(request()->routeIs('admin.transportations.*'))
-                showToast('Berhasil memuat Data Transportasi');
-            @elseif(request()->routeIs('admin.routes.*'))
-                showToast('Berhasil memuat Manajemen Rute Perjalanan');
-            @elseif(request()->routeIs('admin.schedule.*'))
-                showToast('Berhasil memuat Manajemen Jadwal Perjalanan');
-            @elseif(request()->routeIs('admin.orders.*'))
-                showToast('Berhasil memuat Manajemen Tiket & Pesanan');
-            @endif
-        });
+        // === 2. Pemicu Otomatis Toast Berdasarkan Halaman ===
+        @if(request()->routeIs('admin.dashboard'))
+        showToast('Berhasil masuk ke Dashboard Utama');
+        @elseif(request()->routeIs('admin.transportations.*'))
+        showToast('Berhasil memuat Data Transportasi');
+        @elseif(request()->routeIs('admin.routes.*'))
+        showToast('Berhasil memuat Manajemen Rute Perjalanan');
+        @elseif(request()->routeIs('admin.schedule.*'))
+        showToast('Berhasil memuat Manajemen Jadwal Perjalanan');
+        @elseif(request()->routeIs('admin.orders.*'))
+        showToast('Berhasil memuat Manajemen Tiket & Pesanan');
+        @endif
+
+    });
     </script>
     
     @stack('scripts')

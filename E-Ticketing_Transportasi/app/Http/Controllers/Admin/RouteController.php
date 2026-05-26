@@ -20,29 +20,47 @@ class RouteController extends Controller
         $rute_terpopuler = Route::withCount('schedules')->orderBy('schedules_count', 'desc')->first();
         $rute_teraktif = $rute_terpopuler ? $rute_terpopuler->kode_rute : '-';
 
-        // 2. Data Dropdown Filter Kota Asal
+        // 2. Data Dropdown Filter Kota Asal dan Tujuan
         $list_kota_asal = Route::distinct()->orderBy('kota_asal', 'asc')->pluck('kota_asal');
-
+        $list_kota_tujuan = Route::distinct()->orderBy('kota_tujuan', 'asc')->pluck('kota_tujuan');
+        
         // 3. Logika Pencarian & Penyaringan Tabel
         $query = Route::query();
 
+        // Filter Berdasarkan Kota Asal
         if ($request->filled('filter_asal')) {
             $query->where('kota_asal', $request->filter_asal);
         }
 
+        // Filter Berdasarkan Kota Tujuan
+        if ($request->filled('filter_tujuan')) {
+            $query->where('kota_tujuan', $request->filter_tujuan);
+        }
+
+        // Filter Berdasarkan Jenis Transportasi ('kereta', 'bus', 'pesawat')
+        if ($request->filled('filter_transportasi')) {
+            $query->where('jenis', $request->filter_transportasi);
+        }
+
+        // Filter Pencarian Teks Bebas
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('kode_rute', 'LIKE', "%{$search}%")
-                  ->orWhere('kota_asal', 'LIKE', "%{$search}%")
-                  ->orWhere('kota_tujuan', 'LIKE', "%{$search}%");
+                ->orWhere('kota_asal', 'LIKE', "%{$search}%")
+                ->orWhere('kota_tujuan', 'LIKE', "%{$search}%");
             });
         }
 
-        $routes = $query->latest()->paginate(10);
+        $routes = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.routes.index', compact(
-            'routes', 'total_rute', 'total_kota', 'rute_teraktif', 'list_kota_asal'
+            'routes', 
+            'total_rute', 
+            'total_kota', 
+            'rute_teraktif', 
+            'list_kota_asal', 
+            'list_kota_tujuan'
         ));
     }
 

@@ -112,7 +112,12 @@
                         <div class="flex items-center justify-between md:justify-start space-x-3">
                             <span class="px-3 py-1 rounded-full text-[10px] font-black bg-teal-500/10 text-teal-600 border border-teal-500/20 flex items-center space-x-1 capitalize">
                                 <span>
-                                    @if($ticketAktif->schedule->transportation->jenis == 'kereta') 🚄 @elseif($ticketAktif->schedule->transportation->jenis == 'bus') 🚌 @else ✈️ @endif
+                                    @if($ticketAktif->schedule->transportation->jenis == 'kereta') 
+                                    <i data-lucide="train" class="w-4 h-4"></i> 
+                                    @elseif($ticketAktif->schedule->transportation->jenis == 'bus') 
+                                    <i data-lucide="bus" class="w-4 h-4"></i> 
+                                    @else <i data-lucide="plane-takeoff" class="w-4 h-4"></i> 
+                                    @endif
                                 </span>
                                 <span>{{ $ticketAktif->schedule->transportation->jenis }}</span>
                             </span>

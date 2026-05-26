@@ -10,7 +10,6 @@ class HomeController extends Controller
     // 1. Menampilkan Halaman Depan dengan Algoritma Jadwal Terlaris Realtime
     public function index()
     {
-        // 💡 CERDAS: Menghitung selisih kursi (total_seats - remaining_seats) sebagai 'sold_seats' 
         // Lalu diurutkan dari yang paling banyak terjual (terlaris) untuk jadwal mendatang
         $rutePopuler = Schedule::with(['route', 'transportation'])
             ->where('departure_date', '>=', date('Y-m-d'))
@@ -24,13 +23,12 @@ class HomeController extends Controller
     }
 
     // 2. Memproses Live Search Pencarian Tiket dari Form Depan
-    // 2. Memproses Live Search Pencarian Tiket dari Form Depan
     public function search(Request $request)
     {
         $request->validate([
             'jenis' => 'required|in:kereta,bus,pesawat',
             'from'  => 'required|string',
-            'to    '  => 'required|string',
+            'to'    => 'required|string',
             'date'  => 'required|date',
         ]);
 
