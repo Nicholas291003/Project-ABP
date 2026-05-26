@@ -2,6 +2,9 @@
 
 Travelg✦ Sistem E-Ticketing Transportasi adalah aplikasi berbasis web dan app yang dirancang untuk mempermudah proses pemesanan tiket perjalanan (Bus, Kereta Api, Travel, dan Pesawat) secara *online*. Proyek ini dibangun menggunakan *framework* Laravel dan mengimplementasikan arsitektur peran (Role-Based Access Control) untuk Admin dan Penumpang.
 
+----
+## Website Travelg✦
+
 ## ✨ Fitur Utama
 
 ### 👨‍💼 Panel Admin
@@ -92,6 +95,10 @@ Ikuti langkah-langkah berikut untuk menjalankan program:
 4. schedules - Jadwal keberangkatan yang menghubungkan transportasi dan rute.
 5. tickets - Data transaksi pemesanan kursi penumpang.
 6. payments - Data simulasi status pembayaran tiket.
+
+----
+## App Travelg✦
+
 
 ----
 
