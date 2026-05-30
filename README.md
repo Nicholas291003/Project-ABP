@@ -1,150 +1,139 @@
-✈️ Travelgo – Sistem E-Ticketing Transportasi Terintegrasi
-
-Travelgo adalah platform pemesanan tiket perjalanan online (Bus, Kereta Api, dan Pesawat) berbasis full-stack. Platform ini memadukan Web Admin Panel sebagai sistem manajemen pusat (backend database & API provider) dan Mobile Client Application sebagai portal interaktif bagi penumpang untuk melakukan transaksi secara real-time.
-
-Proyek ini terbagi menjadi dua sub-direktori utama di dalam repositori:
-
-E-Ticketing_Transportasi : Aplikasi web berbasis framework Laravel 12.x yang bertugas mengelola data operasional admin dan menyediakan RESTful API.
-
-travelgo_app : Aplikasi mobile berbasis framework Flutter (Dart) yang bertugas sebagai antarmuka pemesanan tiket bagi penumpang.
-
-✨ Fitur Utama Sistem
-
-1. 👨‍💼 Panel Manajemen Web Admin (Laravel 12.x)
-
-Dashboard Finansial & Operasional : Menyajikan visualisasi ringkasan total armada aktif, koridor rute, dan grafik performa penjualan tiket.
-
-Manajemen Armada Transportasi : Operasi CRUD data spesifikasi armada (Bus, Kereta, Pesawat), nomor lambung, total kapasitas kursi, kelas layanan, dan status kelayakan jalan (active/maintenance).
-
-Manajemen Jaringan Rute : Operasi CRUD koridor perjalanan, koordinat stasiun/terminal asal dan tujuan, serta perhitungan jarak tempuh dan tarif dasar.
-
-Manajemen Penjadwalan & Tarif : Pengaturan jam keberangkatan, estimasi waktu tiba, sisa kursi dinamis, serta penentuan harga tiket final.
-
-Filter Multi-Kombinasi : Pencarian data rute dan armada yang responsif berdasarkan kota asal, kota tujuan, jenis transportasi, maupun kelas layanan secara real-time.
-
-2. 👤 Portal Penumpang Mobile App (Flutter)
-
-Autentikasi Aman : Fitur Login & Register yang terhubung langsung dengan keamanan token API Laravel Sanctum.
-
-Beranda Bento Box UI : Tampilan beranda premium modern dengan integrasi indikator cuaca lokal dan daftar rekomendasi rute terlaris dari database.
-
-Filter Pencarian Tiket Manual : Pencarian jadwal perjalanan yang fleksibel dengan pengisian nama kota mandiri dan pemilihan tanggal lewat kalender interaktif (datepicker).
-
-Denah Kursi Interaktif : Antarmuka pemilihan nomor kursi gerbong/armada secara mandiri dengan pencegahan pemilihan kursi yang sudah terisi (booked).
-
-Siklus Checkout & Transaksi Instan : Pembuatan pesanan langsung di database Laravel dengan status pembayaran yang berubah otomatis dari pending menjadi lunas.
-
-E-Ticket & Boarding Pass Digital : Menghasilkan manifes tiket fisik digital yang rapi, lengkap dengan visualisasi Kode QR sebagai gerbang validasi masuk stasiun/bandara.
-
-Manifes Riwayat Transaksi : Melacak rekam jejak pembelian tiket aktif maupun pembatalan (refund) pengguna.
-
-🛠️ Teknologi yang Digunakan
-
-Sisi Web Backend & API (Laravel)
-
-Framework Utama : Laravel 12.x (PHP >= 8.2)
-
-Sistem Keamanan : Laravel Breeze & Laravel Sanctum (Token-Based REST API)
-
-Basis Data : MySQL
-
-Antarmuka Web : Tailwind CSS & Bootstrap 5
-
-Sisi Mobile Client (Flutter)
-
-Bahasa & SDK : Flutter SDK & Dart Language
-
-Komunikasi Jaringan : HTTP Client Package (REST API Integration)
-
-Manajemen UI : Glassmorphic Premium UI & Fluent Custom Animation
-
-🗄️ Struktur Basis Data (Tabel Utama MySQL)
-
-users : Menyimpan kredensial akun pengguna, enkripsi password, dan klasifikasi hak akses (role: admin/penumpang).
-
-transportations : Menyimpan data spesifikasi armada, kapasitas kursi, kelas layanan (Ekonomi, Bisnis, Eksekutif), fasilitas, dan status operasional.
-
-routes (atau travel_routes) : Mencatat jaringan koridor perjalanan, kota asal, kota tujuan, simpul transit, jarak, dan tarif dasar.
-
-schedules : Menghubungkan relasi armada dan rute untuk menentukan tanggal pergi, jam keberangkatan, jam tiba, dan sisa kursi dinamis.
-
-orders (atau tickets) : Mencatatkan transaksi reservasi kursi, kode booking unik (TK-XXXXXX), total bayar, jumlah penumpang, dan status tagihan (pending/lunas).
-
-🚀 Panduan Instalasi & Menjalankan Proyek
-
-Bagian A: Menjalankan Server Web Backend (Laravel)
-
-Buka terminal Anda dan masuk ke direktori proyek backend:
-
-cd E-Ticketing_Transportasi
-
-
-Pasang seluruh dependensi pustaka PHP:
-
-composer install
-
-
-Pasang dependensi Node.js untuk aset tampilan web:
-
-npm install
-npm run build
-
-
-Konfigurasikan lingkungan database:
-
-Salin file .env.example menjadi .env
-
-Buka file .env dan sesuaikan koneksi database MySQL Anda (contoh nama database: travelgo_db).
-
-Buat kunci enkripsi aplikasi, jalankan migrasi tabel database beserta pengisian data awal (seeder):
-
-php artisan key:generate
-php artisan migrate
-php artisan db:seed
-
-
-Nyalakan server lokal backend Laravel:
-
-php artisan serve
-
-
-Server backend akan berjalan secara default di port http://127.0.0.1:8000.
-
-Bagian B: Menjalankan Aplikasi Mobile (Flutter)
-
-Buka tab terminal baru, lalu masuk ke direktori aplikasi mobile:
-
-cd travelgo_app
-
-
-Ambil dan pasang paket dependensi Flutter:
-
-flutter pub get
-
-
-Pastikan emulator Android Anda sudah aktif atau perangkat HP fisik telah terhubung dalam mode USB Debugging.
-
-Jalankan aplikasi ke perangkat target:
-
-flutter run
-
-
-(Catatan Jaringan: Aplikasi mobile dikonfigurasi menembak IP 10.0.2.2:8000 khusus emulator Android untuk menjangkau localhost server Laravel laptop Anda).
-
-👥 Tim Pengembang (Project ABP)
-
-Proyek integrasi sistem full-stack ini dikembangkan secara kolaboratif oleh:
-
-Nicholas Aditya R. (1203230080) – Backend Engineering & Core Database Design
-
-Arya Maulana (1203230120) – Backend Engineering & Security Core Architecture
-
-Mukhlis Zahrawani Sutrisno (1203230065) – Web Frontend Engineering & Admin UI Design
-
-Josefania Tirsa Putri Immanuely (1203230012) – Mobile Application Core Engineering (Flutter)
-
-Muamar Haikal F. (1203230118) – Mobile Application Interface Engineering & State Management
-
-Ahmad Wahyudi (1203230116) – RESTful API Bridging, System Integration Testing, & Documentation
-
-Proyek ini disusun dan diselesaikan untuk memenuhi kriteria Tugas Besar Terintegrasi pada Program Studi S1 Informatika, Fakultas Informatika, Universitas Telkom Surabaya (2026).
+# ✈️ Travelgo – Sistem E-Ticketing Transportasi Terintegrasi
+
+Travelgo Sistem E-Ticketing Transportasi adalah aplikasi berbasis web dan mobile app yang dirancang untuk mempermudah proses pemesanan tiket perjalanan secara *online*. Platform ini mencakup pemesanan tiket untuk berbagai armada seperti Bus, Kereta Api, Travel, dan Pesawat. Proyek ini dibangun dengan menggunakan *framework* Laravel serta mengimplementasikan arsitektur hak akses (Role-Based Access Control) terpisah untuk Admin dan Penumpang.
+
+---
+
+## 💻 Website Travelgo
+
+### ✨ Fitur Utama
+
+#### 👨‍💼 Panel Admin
+* **Dashboard Admin:** Menyajikan ringkasan visual seluruh data operasional sistem.
+* **Manajemen Transportasi:** Operasi CRUD untuk mengelola data spesifikasi armada (Bus, Kereta, Travel, Pesawat) beserta kapasitas kursinya.
+* **Manajemen Rute:** Operasi CRUD data wilayah keberangkatan asal, titik stasiun/terminal tujuan, serta jarak tempuh perjalanan.
+* **Manajemen Jadwal:** Mengatur rincian waktu keberangkatan armada serta penetapan harga tarif dasar tiket.
+* **Filter Multi-Kombinasi:** Fitur pencarian data rute dan armada yang responsif berdasarkan kota asal, kota tujuan, jenis transportasi, maupun kelas layanan secara real-time.
+
+#### 👤 Portal Penumpang (User / Guest)
+* **Pencarian Tiket Terintegrasi:** Memungkinkan pencarian jadwal keberangkatan aktif berdasarkan filter kota asal, kota tujuan, dan tanggal pergi.
+* **Pemesanan Kursi:** Menyediakan antarmuka pemilihan nomor kursi secara spesifik sesuai sisa kapasitas gerbong armada.
+* **Simulasi Pembayaran:** Menyediakan alur proses *checkout* terpadu dengan berbagai pilihan metode pembayaran seperti Transfer Bank Virtual Account dan E-Wallet.
+* **Cetak E-Ticket:** Menghasilkan slip *Boarding Pass* digital interaktif yang dilengkapi dengan data manifes penumpang .
+* **Riwayat Pemesanan:** Berfungsi untuk melacak rekam jejak status pembayaran tiket pengguna (Booked / Paid) .
+
+---
+
+## 📱 App Travelgo 
+Aplikasi mobile built-in menggunakan framework Flutter untuk memudahkan penumpang melakukan manajemen transaksi langsung dari smartphone mereka. Fitur-fitur utama meliputi:
+* **Autentikasi Sanctum Token:** Sistem Login & Register terintegrasi langsung dengan server backend Laravel.
+* **Beranda Bento Box UI:** Tampilan visual dashboard modern yang menampilkan rekomendasi rute terlaris secara dinamis dari database.
+* **Kalender Interaktif:** Memilih tanggal perjalanan secara manual menggunakan komponen *datepicker* bawaan Android/iOS.
+* **Real-time Seat Selection:** Memilih tempat duduk mandiri dengan penguncian data kursi otomatis agar tidak bentrok dengan penumpang lain.
+* **Boarding Pass & QR Code:** Menerbitkan kode QR unik dari database setelah status tagihan berubah menjadi lunas untuk keperluan validasi gerbang masuk.
+
+---
+
+## 🛠️ Teknologi yang Digunakan 
+* **Backend Framework:** Laravel 12.x menggunakan PHP 8.2 .
+- **Mobile Framework:** Flutter SDK menggunakan bahasa pemrograman Dart.
+* **Basis Data:** MySQL .
+* **Antarmuka Web UI:** Bootstrap 5 & Tailwind CSS .
+* **Sistem Keamanan Auth:** Laravel Breeze  & Laravel Sanctum API Tokens.
+
+---
+
+## 📋 Prasyarat Sistem 
+Sebelum menjalankan proyek ini, pastikan komputer Anda telah terinstal:
+* PHP dengan versi minimal 8.2 .
+* [Composer](https://getcomposer.org/) .
+* [Node.js & NPM](https://nodejs.org/) .
+* [MySQL](https://www.mysql.com/) & paket server lokal XAMPP .
+* Flutter SDK (untuk menjalankan sisi mobile client).
+
+---
+
+## 🚀 Panduan Instalasi & Eksekusi 
+
+### Bagian 1: Pengaturan Server Web Backend (Laravel)
+1. **Masuk ke dalam direktori proyek web:**
+```bash
+   cd E-Ticketing_Transportasi
+   composer install
+   ```
+2. **Instal seluruh dependensi paket PHP:**
+```bash
+   composer install
+   ``` 
+3. **Instal dependensi Node.js & kompilasi aset frontend:**
+```bash
+   npm install
+   npm run build
+   ``` 
+4. **Konfigurasi Environment Aplikasi:**
+   Salin berkas konfigurasi sampel menjadi berkas lingkungan lokal :
+```bash
+   cp .env.example .env
+   ``` 
+   Buka berkas `.env` dan sesuaikan detail pengaturan koneksi database MySQL Anda :
+```text
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=travelgo_db
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ``` 
+5. **Generate Application Key:**
+```bash
+   php artisan key:generate
+   ``` 
+6. **Migrasi Database & Data Awal (Seeder):**
+   Jalankan perintah ini untuk membangun seluruh struktur tabel sistem (users, transports, travel_routes, schedules, tickets, payments) beserta records simulasi data awal :
+```bash
+   php artisan migrate --seed
+   ``` 
+7. **Nyalakan Server Lokal Laravel:**
+```bash
+   php artisan serve
+   ``` 
+
+### Bagian 2: Pengaturan Mobile Client App (Flutter)
+1. **Buka tab terminal baru dan masuk ke direktori proyek mobile:**
+```bash
+   cd travelgo_app
+   ```
+2. **Unduh dependensi pub package Dart:**
+```bash
+  flutter pub get
+  ```
+3. **Jalankan aplikasi ke Emulator atau Perangkat HP Fisik:**
+```bash
+  flutter run
+  ```
+
+---
+
+### 🗄️ Struktur Basis Data (Tabel Utama)
+1. **users** Menyimpan informasi akun pengguna beserta pembagian level hak akses (admin/user) .
+2. **transports** Menyimpan data spesifikasi teknis dan nama armada transportasi .
+3. **travel_routes** Mencatat data jaringan rute koridor yang meliputi kota asal, tujuan, dan jarak tempuh .
+4. **schedules** Menyimpan data jadwal keberangkatan yang menghubungkan armada transportasi dengan rute tujuan .
+5. **tickets** Menyimpan data transaksi pemesanan manifes kursi milik penumpang .
+6. **payments** Mencatat status konfirmasi data simulasi pembayaran tiket pengguna .
+
+---
+
+###  👥 Tim Pengembang
+Proyek kolaborasi terintegrasi ini disusun dan dikembangkan oleh:
+1. Nicholas Aditya R. (1203230080) - Backend Development & Database Design 
+2. Arya Maulana (1203230120) - Backend Development & Database Design 
+3. Mukhlis Zahrawani Sutrisno (1203230065) - Web Frontend Development 
+4. Josefania Tirsa Putri Immanuely (1203230012) - Mobile App Development (Flutter) 
+5. Muamar Haikal F. (1203230118) - Mobile App Development (Flutter) 
+6. Ahmad Wahyudi (1203230116) - API Integration, Testing, & Dokumentasi
+
+---
+
+Dibuat untuk memenuhi Tugas/Proyek Program Studi Informatika, Fakultas Informatika, Universitas Telkom Surabaya (2026).
+ 
