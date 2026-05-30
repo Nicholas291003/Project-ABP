@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         // --- 1. SEED DATA AKUN USER ---
         User::create([
-            'name' => 'Super Admin TiketKuy',
-            'email' => 'admin@tiketkuy.com',
+            'name' => 'Super Admin Travelgo',
+            'email' => 'admin@travelgo.com',
             'password' => Hash::make('password123'),
             'role' => 'admin',
         ]);
