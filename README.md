@@ -115,12 +115,12 @@ Sebelum menjalankan proyek ini, pastikan komputer Anda telah terinstal:
 ---
 
 ### 🗄️ Struktur Basis Data (Tabel Utama)
-1. **users** Menyimpan informasi akun pengguna beserta pembagian level hak akses (admin/user) .
-2. **transports** Menyimpan data spesifikasi teknis dan nama armada transportasi .
-3. **travel_routes** Mencatat data jaringan rute koridor yang meliputi kota asal, tujuan, dan jarak tempuh .
-4. **schedules** Menyimpan data jadwal keberangkatan yang menghubungkan armada transportasi dengan rute tujuan .
-5. **tickets** Menyimpan data transaksi pemesanan manifes kursi milik penumpang .
-6. **payments** Mencatat status konfirmasi data simulasi pembayaran tiket pengguna .
+1. **users** Menyimpan informasi akun pengguna beserta pembagian level hak akses (admin/user).
+2. **transports** Menyimpan data spesifikasi teknis dan nama armada transportasi.
+3. **travel_routes** Mencatat data jaringan rute koridor yang meliputi kota asal, tujuan, dan jarak tempuh.
+4. **schedules** Menyimpan data jadwal keberangkatan yang menghubungkan armada transportasi dengan rute tujuan.
+5. **tickets** Menyimpan data transaksi pemesanan manifes kursi milik penumpang.
+6. **payments** Mencatat status konfirmasi data simulasi pembayaran tiket pengguna.
 
 ---
 
