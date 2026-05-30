@@ -23,7 +23,7 @@ A. PRASYARAT SISTEM
    - PHP = 8.2, Composer, Node.js & NPM, MySQL (XAMPP), dan Flutter SDK.
 
 B. LANGKAH KONFIGURASI BACKEND
-   1. Ekstrak berkas dan buka terminal di direktori E-Ticketing_Transportasi.
+   1. Ekstrak berkas jika mengunduh zip nya atau push langsung dengan git kemudian buka terminal di direktori ETicketing_Transportasi.
    2. Jalankan perintah composer install
    3. Jalankan perintah npm install && npm run build
    4. Salin file .env.example menjadi .env, lalu buat database bernama travelgo_db di phpMyAdmin.
