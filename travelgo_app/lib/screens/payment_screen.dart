@@ -63,7 +63,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Membaca manifest dinamis dari data tabel orders Database Anda
+    // Membaca manifest dinamis dari data tabel orders Database
     final String kodeTiket = widget.orderData['order_code'] ?? 'TK-UNKNOWN';
     final int pax = widget.orderData['total_passengers'] ?? 1;
     final String totalHarga = "Rp ${widget.orderData['total_price']}";

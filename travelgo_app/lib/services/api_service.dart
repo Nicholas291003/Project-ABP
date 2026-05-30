@@ -21,7 +21,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-        // Simpan token token Sanctum yang dikirim oleh AuthController Anda
+        // Simpan token token Sanctum yang dikirim oleh AuthController  
         tokenAkses = data['token']; 
         return data;
       }
@@ -39,7 +39,7 @@ class ApiService {
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $tokenAkses', // Mengirim token sanctum Anda
+          'Authorization': 'Bearer $tokenAkses', // Mengirim token sanctum  
         },
       );
 
@@ -78,7 +78,7 @@ class ApiService {
   // 4. FUNGSI CARI TIKET (GET /api/jadwal/search) - Membutuhkan Token Sanctum
   static Future<List<dynamic>?> searchJadwal(String asal, String tujuan, String tanggal) async {
     try {
-      // Menyusun URL dengan Query Parameter sesuai kebutuhan ScheduleController Anda
+      // Menyusun URL dengan Query Parameter sesuai kebutuhan ScheduleController  
       final String urlPencarian = '$baseUrl/jadwal/search?asal=$asal&tujuan=$tujuan&tanggal=$tanggal';
       
       final response = await http.get(

@@ -173,7 +173,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                               itemBuilder: (context, index) {
                                 final jadwal = _daftarJadwalHasil[index];
                                 
-                                // Memetakan data JSON dari database Laravel Anda
+                                // Memetakan data JSON dari database Laravel
                                 String namaArmada = jadwal['transportation']['name'] ?? 'Armada';
                                 String tipeKelas = (jadwal['class'] ?? 'EKSEKUTIF').toString().toUpperCase();
                                 String jamMulai = (jadwal['departure_time'] ?? '00:00').toString().substring(0, 5);

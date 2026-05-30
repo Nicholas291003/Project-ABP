@@ -41,7 +41,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
       _isProcessingOrder = true;
     });
 
-    // Menembak endpoint POST /api/order di Laravel Anda
+    // Menembak endpoint POST /api/order di Laravel
     final hasilOrder = await ApiService.buatPesanan(widget.scheduleId);
 
     setState(() {

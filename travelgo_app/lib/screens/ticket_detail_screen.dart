@@ -21,7 +21,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Membaca variabel manifes asli dari database orders Anda
+    // Membaca variabel manifes asli dari database orders
     final String orderCode = widget.orderData['order_code'] ?? 'TK-UNKNOWN';
     final String totalPassengers = "${widget.orderData['total_passengers'] ?? 1} Pax";
     final String totalBayar = "Rp ${widget.orderData['total_price'] ?? 0}";
