@@ -1,0 +1,46 @@
+pengumpulan proyek tugas besar Travelgo – Sistem E-Ticketing Transportasi Terintegrasi
+
+LINK REPOSITORI:
+https://github.com/Nicholas291003/Project-ABP.git
+
+----------------------------------------------------------------------
+INFORMASI KREDENSIAL AKUN UTUK PENGUJIAN (ROLE-BASED ACCESS)
+----------------------------------------------------------------------
+
+1. ROLE ADMIN PANEL
+   - Username   admin@travelgo.com 
+   - Password   password123
+
+2. ROLE PENUMPANG  USER (Akses Aplikasi WEBSITE & Mobile)
+   - Username   penumpang1@email.com
+   - Password   password123
+
+----------------------------------------------------------------------
+PANDUAN KONFIGURASI APLIKASI 
+----------------------------------------------------------------------
+
+A. PRASYARAT SISTEM
+   - PHP = 8.2, Composer, Node.js & NPM, MySQL (XAMPP), dan Flutter SDK.
+
+B. LANGKAH KONFIGURASI BACKEND
+   1. Ekstrak berkas dan buka terminal di direktori E-Ticketing_Transportasi.
+   2. Jalankan perintah composer install
+   3. Jalankan perintah npm install && npm run build
+   4. Salin file .env.example menjadi .env, lalu buat database bernama travelgo_db di phpMyAdmin.
+   5. Sesuaikan konfigurasi DB_DATABASE, DB_USERNAME, dan DB_PASSWORD di file .env.
+   6. Jalankan perintah php artisan keygenerate.
+   7. Jalankan perintah migrasi & seeder otomatis php artisan migrate --seed
+      (Berkas basis data fisik .sql juga kami sertakan di dalam folder kompresi utama sebagai cadangan).
+   8. Jalankan server dengan perintah php artisan serve
+
+C. LANGKAH KONFIGURASI MOBILE CLIENT (Flutter)
+   1. Buka folder travelgo_app menggunakan VS Code.
+   2. Buka terminal di VS Code, lalu jalankan perintah: flutter pub get
+   3. Pastikan server backend Laravel sudah menyala di port 8000.
+   4. Jalankan emulator Android (Ctrl+Shift+P -> Flutter: Launch Emulator) atau colokkan HP fisik.
+   5. Sesuaikan Base URL API pada kode aplikasi di dalam file tarvelgo_app/lib/services/api_service.dart:
+      - Jika menggunakan Emulator Android: Arahkan ke http://10.0.2.2:8000/api
+      - Jika menggunakan HP Fisik: Arahkan ke http://[IP_Lokal_Laptop]:8000/api
+   6. Jalankan aplikasi dengan menekan tombol F5 atau ketik perintah di terminal: flutter run
+
+Terima kasih.
