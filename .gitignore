@@ -1,0 +1,25 @@
+# Mengabaikan folder konfigurasi Visual Studio & VS Code
+.vs/
+.vscode/
+
+# Mengabaikan file workspace otomatis bawaan MS Visual Studio / Copilot Index
+*.slnx
+*.sqlite
+CMakeWorkspaceSettings.json
+ProjectSettings.json
+VSWorkspaceState.json
+
+# Mengabaikan file log atau sistem operasi lokal
+*.log
+.DS_Store
+Thumbs.db
+
+# Mengabaikan dependensi dan file konfigurasi di semua subfolder
+**/vendor/
+**/node_modules/
+**/.env
+
+# Mengabaikan folder hasil build/kompilasi (Laravel & Mobile App)
+**/build/
+**/.dart_tool/
+**/public/build/
