@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
+  //Jika memakai Emulator Android
   static const String baseUrl = 'http://10.0.2.2:8000/api';
+  //Jika memakai HP Fisik
+  //String baseUrl = "http://192.168.1.5:8000/api";
   
   // Variabel statis untuk menyimpan token selama aplikasi berjalan
   static String? tokenAkses;
