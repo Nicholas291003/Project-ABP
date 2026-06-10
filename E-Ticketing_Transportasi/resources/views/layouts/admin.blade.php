@@ -124,6 +124,13 @@
                                 <i data-lucide="ticket" class="w-4.5 h-4.5"></i>
                                 <span>Tiket & Pesanan</span>
                         </a>
+
+                        {{-- Keuangan & Billing --}}
+                        <a href="{{ route('admin.payments.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:bg-slate-900 hover:text-teal-400 transition-all {{ request()->routeIs('admin.payments.*') ? 'bg-slate-900/80 text-teal-400 border border-teal-500/20' : '' }}">
+                            <i data-lucide="credit-card" class="w-5 h-5"></i>
+                            <span>Keuangan & Billing</span>
+                        </a>
+                        
                     </nav>
                 </div>
             </div>

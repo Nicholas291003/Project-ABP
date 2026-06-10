@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PaymentDashboardController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,7 +105,11 @@ Route::middleware(['auth'])->group(function () {
         
         // Kelola Pesanan Tiket (Tanpa halaman 'create' & 'store' karena dibuat oleh penumpang)
         Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy']);
-        
+        // Kelola Pembayaran Tiket
+        Route::get('/payments', [PaymentDashboardController::class, 'index'])->name('payments.index');
+        Route::resource('payment-methods', PaymentMethodController::class);
+        Route::get('payments/invoice/{id}', [PaymentDashboardController::class, 'showInvoice'])->name('payments.invoice');
+
         // Halaman Web Service API Log (Untuk Monitoring & Debugging API)
         Route::get('/api-service', [AdminDashboardController::class, 'apiService'])->name('api.service');
     });

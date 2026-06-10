@@ -14,9 +14,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            PaymentMethodSeeder::class,
+        ]);
         // --- 1. SEED DATA AKUN USER ---
         User::create([
-            'name' => 'Super Admin Travelgo',
+            'name' => 'Admin Travelgo',
             'email' => 'admin@travelgo.com',
             'password' => Hash::make('password123'),
             'role' => 'admin',

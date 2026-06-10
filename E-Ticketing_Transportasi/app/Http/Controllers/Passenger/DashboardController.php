@@ -137,37 +137,35 @@ class DashboardController extends Controller
 
     public function showPayment($order_code)
     {
-        $order = Order::with(['schedule.route', 'schedule.transportation','seatBookings'])
-                        ->where('user_id', Auth::id())
-                        ->where('order_code', $order_code)
-                        ->firstOrFail();
+        $order = Order::with(['schedule.route', 'schedule.transportation', 'seatBookings'])
+            ->where('user_id', Auth::id())
+            ->where('order_code', $order_code)
+            ->firstOrFail();
 
         if($order->status == 'lunas'){
-            return redirect()->route('passenger.dashboard')->with('error', 'Tiket sudah dibayar atau tidak valid untuk pembayaran.');
+            return redirect()->route('passenger.dashboard')->with('error', 'Tiket sudah dibayar');
         }
 
-        return view('passenger.payment', compact('order'));
+        $payment_methods = \App\Models\PaymentMethod::where('status', 'aktif')->get();
+
+        return view('passenger.payment', compact('order', 'payment_methods'));
     }
 
     public function processPayment(Request $request, $order_code)
     {
         $order = Order::where('user_id', Auth::id())
-                        ->where('order_code', $order_code)
-                        ->firstOrFail();
+            ->where('order_code', $order_code)
+            ->firstOrFail();
 
-        // Simulasi proses pembayaran (langsung sukses)
-        $order = Order::where('user_id', Auth::id())
-                        ->where('order_code', $order_code)
-                        ->firstOrFail();
         $request->validate([
-            'payment_method' => 'required|string',
+            'payment_method_id' => 'required|exists:payment_methods,id',
         ]);
 
         $order->update([
             'status' => 'lunas',
         ]);
 
-        return redirect()->route('passenger.dashboard')->with('success', 'Pembayaran berhasil! E-Ticket Anda sudah bisa dilihat.');
+        return redirect()->route('passenger.dashboard')->with('success', 'Pembayaran berhasil! E-Ticket Anda telah aktif.');
     }
 
     public function cancelTicket($order_code){
