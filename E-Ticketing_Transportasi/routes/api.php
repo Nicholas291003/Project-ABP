@@ -32,6 +32,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     // Endpoint untuk melakukan pembayaran pesanan
     Route::post('/order/{id}/bayar', [OrderController::class, 'bayar']);
-    
+    Route::get('/payment-methods', function () {
+        try {
+            $data = \App\Models\PaymentMethod::where('status', 'aktif')->get();
+            return response()->json([
+                'status' => 'sukses',
+                'data' => $data
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error_laravel',
+                'pesan_eror' => $e->getMessage()
+            ], 500);
+        }
+    });
 
 });

@@ -1,183 +1,271 @@
 import 'package:flutter/material.dart';
+import 'dart:async'; // ➔ WAJIB DITAMBAHKAN UNTUK MENGAKTIFKAN TIMER
 import 'package:travelgo_app/services/api_service.dart';
-import 'package:travelgo_app/screens/ticket_detail_screen.dart';
+import 'package:travelgo_app/screens/payment_status_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final Map<String, dynamic> orderData; // Menerima lemparan data transaksi asli dari Database
+  final Map<String, dynamic>? orderData;
 
-  const PaymentScreen({super.key, required this.orderData});
+  const PaymentScreen({super.key, this.orderData});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  String _selectedMethod = 'BCA VA';
-  bool _isProcessingPayment = false; // Efek loading saat proses verifikasi bank ke Database
+  List<dynamic> _paymentMethods = []; 
+  bool _isLoadingMethods = true; 
+  int? _selectedMethodId; 
+  bool _isProcessingPayment = false;
 
-  void _eksekusiBayarKeDatabase() async {
+  // VARIABEL STATE UNTUK HITUNG MUNDUR JALAN
+  Timer? _countdownTimer;
+  int _remainingSeconds = 900; // 15 menit = 15 * 60 detik
+
+  @override
+  void initState() {
+    super.initState();
+    _muatMetodePembayaranDariAdmin();
+    _mulaiHitungMundur(); // ➔ Jalankan fungsi timer saat halaman dibuka
+  }
+
+  @override
+  void dispose() {
+    _countdownTimer?.cancel(); // ➔ Matikan timer saat keluar dari halaman agar RAM tidak bocor
+    super.dispose();
+  }
+
+  // FUNGSI MENGGERAKKAN TIMER SETIAP DETIK
+  void _mulaiHitungMundur() {
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--; // Kurangi 1 detik
+        });
+      } else {
+        _countdownTimer?.cancel();
+        _tanganiWaktuHabis(); // Picu fungsi jika waktu habis
+      }
+    });
+  }
+
+  // FUNGSI FORMAT DETIK MENJADI HH:MM:SS (Contoh: 00:14:59)
+  String _formatDurasiWaktu(int totalDetik) {
+    int jam = totalDetik ~/ 3600;
+    int menit = (totalDetik % 3600) ~/ 60;
+    int detik = totalDetik % 60;
+
+    String jamStr = jam.toString().padLeft(2, '0');
+    String menitStr = menit.toString().padLeft(2, '0');
+    String detikStr = detik.toString().padLeft(2, '0');
+
+    return "$jamStr:$menitStr:$detikStr";
+  }
+
+  // FUNGSI JIKA WAKTU TRANSAKSI HABIS
+  void _tanganiWaktuHabis() {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Waktu pembayaran telah habis! Silakan lakukan booking ulang.'),
+          backgroundColor: Color(0xFFEF4444),
+        ),
+      );
+      Navigator.of(context).pop(); // Tendang kembali ke halaman sebelumnya
+    }
+  }
+
+  void _muatMetodePembayaranDariAdmin() async {
+    final data = await ApiService.fetchMetodePembayaran(); 
+    if (data != null && data.isNotEmpty) {
+      setState(() {
+        _paymentMethods = data;
+        _selectedMethodId = data.first['id']; 
+        _isLoadingMethods = false;
+      });
+    } else {
+      setState(() {
+        _isLoadingMethods = false;
+      });
+    }
+  }
+
+  void _eksekusiPembayaran() async {
+    if (_selectedMethodId == null) return;
+
     setState(() {
       _isProcessingPayment = true;
     });
 
-    // Mengambil ID transaksi dari data yang dioper oleh Database
-    final int idOrder = widget.orderData['id']; 
+    final int idOrder = widget.orderData?['id'] ?? 102;
+    final int idMetode = _selectedMethodId!;
 
-    // Menembak endpoint POST /api/order/{id}/bayar
-    final hasilBayar = await ApiService.bayarPesanan(idOrder);
+    final hasilBayar = await ApiService.bayarPesanan(idOrder, idMetode);
 
     setState(() {
       _isProcessingPayment = false;
     });
 
     if (hasilBayar != null && hasilBayar['status'] == 'sukses') {
+      _countdownTimer?.cancel(); // Matikan timer karena sudah lunas
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(hasilBayar['pesan'] ?? 'Pembayaran berhasil!'),
+            content: Text(hasilBayar['pesan'] ?? 'Pembayaran Berhasil!'),
             backgroundColor: const Color(0xFF16A34A),
           ),
         );
-
-        // Jika lunas, lempar langsung ke halaman E-Ticket utama
-        final Map<String, dynamic> dataTiketLunas = Map<String, dynamic>.from(widget.orderData);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => TicketDetailScreen(
-              orderData: dataTiketLunas),
-          ),
+          MaterialPageRoute(builder: (context) => const PaymentStatusScreen()),
         );
       }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Gagal melakukan verifikasi pembayaran. Silakan coba kembali.'),
-            backgroundColor: Color(0xFFEF4444),
+          SnackBar(
+            content: Text(hasilBayar?['pesan'] ?? 'Gagal memproses transaksi ke server Laravel.'),
+            backgroundColor: const Color(0xFFEF4444),
           ),
         );
       }
     }
   }
 
+  IconData _getIconKategori(String? kategori) {
+    switch (kategori?.toLowerCase()) {
+      case 'qris':
+      case 'e-money':
+        return Icons.qr_code_scanner_rounded;
+      case 'bank':
+      case 'va':
+      case 'virtual account':
+        return Icons.account_balance_rounded;
+      default:
+        return Icons.payment_rounded;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Membaca manifest dinamis dari data tabel orders Database
-    final String kodeTiket = widget.orderData['order_code'] ?? 'TK-UNKNOWN';
-    final int pax = widget.orderData['total_passengers'] ?? 1;
-    final String totalHarga = "Rp ${widget.orderData['total_price']}";
+    final String totalHargaText = widget.orderData?['total_price'] != null
+        ? "Rp ${widget.orderData!['total_price']}"
+        : "Rp 475.220";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text(
-          'Pembayaran',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
-        ),
+        title: const Text('Payment', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: const BackButton(color: Color(0xFF1E293B)),
       ),
       body: Column(
         children: [
+          // BANNER COUNTDOWN TIME (SUDAH AKTIF BERJALAN MUNDUR)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            color: const Color(0xFFFEF2F2),
+            child: Row(
+              children: [
+                const Icon(Icons.access_time_rounded, color: Color(0xFFEF4444), size: 16),
+                const SizedBox(width: 8),
+                Text(
+                  'The remaining time of order ${_formatDurasiWaktu(_remainingSeconds)}', // ➔ RENDER WAKTU AKTIF
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFEF4444)),
+                ),
+              ],
+            ),
+          ),
+
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Selesaikan Pembayaran',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF1E293B)),
-                  ),
-                  const SizedBox(height: 4.0),
-                  const Text(
-                    'Pilih metode pembayaran untuk menerbitkan E-Ticket Anda.',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
-                  ),
-                  const SizedBox(height: 20.0),
+                  const Text('Select Payment Method', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: Color(0xFF1E293B))),
+                  const SizedBox(height: 12),
 
-                  // KOMPONEN 1: RINGKASAN TIKET REAL-TIME DARI Database
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          children: [
-                            Icon(Icons.receipt_long_outlined, color: Color(0xFF94A3B8), size: 18.0),
-                            SizedBox(width: 8.0),
-                            Text(
-                              'Ringkasan Tiket',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                  if (_isLoadingMethods)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: CircularProgressIndicator(color: Color(0xFFFF5E1F)),
+                      ),
+                    )
+                  else if (_paymentMethods.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text('Tidak ada metode pembayaran aktif dari admin.', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      ),
+                    )
+                  else
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _paymentMethods.length,
+                      itemBuilder: (context, index) {
+                        final method = _paymentMethods[index];
+                        bool isSelected = _selectedMethodId == method['id'];
+                        
+                        final String namaMethod = method['nama'] ?? '-';
+                        final String detailMethod = method['kategori'] == 'qris' 
+                            ? 'Scan QR Code Instant' 
+                            : "No. Rek: ${method['nomor_tujuan'] ?? 'Auto Verification'}";
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: isSelected ? const Color(0xFFFF5E1F) : const Color(0xFFE2E8F0),
+                              width: isSelected ? 2.0 : 1.0,
                             ),
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Divider(height: 1, color: Color(0xFFF1F5F9)),
-                        ),
-                        _buildSummaryRow('KODE TRANSAKSI TIKET', kodeTiket, isTeal: true),
-                        const SizedBox(height: 12.0),
-                        _buildSummaryRow('KUANTITAS PEMESANAN', '$pax Penumpang (Pax)'),
-                        const SizedBox(height: 12.0),
-                        _buildSummaryRow('STATUS TAGIHAN', 'PENDING (Menunggu Pembayaran)', isOrange: true),
-                      ],
+                          ),
+                          child: ListTile(
+                            onTap: () {
+                              setState(() {
+                                _selectedMethodId = method['id'];
+                              });
+                            },
+                            leading: Icon(_getIconKategori(method['kategori']), color: isSelected ? const Color(0xFFFF5E1F) : const Color(0xFF64748B)),
+                            title: Text(
+                              namaMethod,
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                            ),
+                            subtitle: Text(
+                              detailMethod,
+                              style: const TextStyle(fontSize: 11, color: Color(0xFF94A3B8)),
+                            ),
+                            trailing: Radio<int>(
+                              value: method['id'] as int,
+                              groupValue: _selectedMethodId,
+                              activeColor: const Color(0xFFFF5E1F),
+                              onChanged: (int? value) {
+                                setState(() {
+                                  _selectedMethodId = value;
+                                });
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                  const SizedBox(height: 24.0),
-
-                  // KOMPONEN 2: PILIHAN METODE PEMBAYARAN
-                  const Text(
-                    'Pilih Metode Pembayaran',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF475569)),
-                  ),
-                  const SizedBox(height: 12.0),
-                  
-                  _buildPaymentMethodTile(
-                    id: 'BCA VA',
-                    title: 'BCA Virtual Account',
-                    subtitle: 'Transfer dicek otomatis',
-                    logoText: 'BCA',
-                  ),
-                  const SizedBox(height: 10.0),
-                  _buildPaymentMethodTile(
-                    id: 'Mandiri VA',
-                    title: 'Mandiri Virtual Account',
-                    subtitle: 'Transfer dari bank mandiri',
-                    logoText: 'Mandiri',
-                  ),
-                  const SizedBox(height: 10.0),
-                  _buildPaymentMethodTile(
-                    id: 'GOPAY',
-                    title: 'GoPay / E-Wallet',
-                    subtitle: 'Konfirmasi instan via smartphone',
-                    iconData: Icons.account_balance_wallet_outlined,
-                  ),
                 ],
               ),
             ),
           ),
 
-          // KOMPONEN 3: BOTTOM TOTAL BAR & ACTION BUTTON
+          // BOTTOM CONTROL BAR FOR TOTAL PRICE & ACTION
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x0A000000),
-                  blurRadius: 10.0,
-                  offset: Offset(0, -4),
-                ),
-              ],
+              boxShadow: [BoxShadow(color: Color(0x06000000), blurRadius: 10, offset: Offset(0, -4))],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,152 +274,33 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    const Text('Total price', style: TextStyle(fontSize: 11, color: Color(0xFF64748B))),
+                    const SizedBox(height: 2),
                     Text(
-                      'Total Tagihan ($pax Pax)',
-                      style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Text(
-                      totalHarga,
+                      totalHargaText,
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Color(0xFFFF5E1F)),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 46.0,
+                  height: 46,
                   child: ElevatedButton(
-                    onPressed: _isProcessingPayment ? null : _eksekusiBayarKeDatabase, // Kunci tombol saat loading
+                    onPressed: (_isProcessingPayment || _selectedMethodId == null) ? null : _eksekusiPembayaran,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF5E1F),
-                      disabledBackgroundColor: const Color(0xFFCBD5E1),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       elevation: 0,
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
                     ),
                     child: _isProcessingPayment
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                        : const Row(
-                            children: [
-                              Icon(Icons.check_circle_outline, color: Colors.white, size: 18.0),
-                              SizedBox(width: 8.0),
-                              Text(
-                                'Bayar Sekarang',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                              ),
-                            ],
-                          ),
+                        ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                        : const Text('Pay Now', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                   ),
-                ),
+                )
               ],
             ),
-          ),
+          )
         ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryRow(String title, String mainText, {bool isTeal = false, bool isOrange = false}) {
-    Color textColor = const Color(0xFF1E293B);
-    if (isTeal) textColor = const Color(0xFF0D9488);
-    if (isOrange) textColor = const Color(0xFFEA580C);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title.toUpperCase(),
-          style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF94A3B8), letterSpacing: 0.5),
-        ),
-        const SizedBox(height: 2.0),
-        Text(
-          mainText,
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: textColor),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentMethodTile({
-    required String id,
-    required String title,
-    required String subtitle,
-    String? logoText,
-    IconData? iconData,
-  }) {
-    bool isSelected = _selectedMethod == id;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedMethod = id;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(14.0),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0x0A0D9488) : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(16.0),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF0D9488) : const Color(0xFFE2E8F0),
-            width: isSelected ? 2.0 : 1.0,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 50,
-              height: 38,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              alignment: Alignment.center,
-              child: logoText != null
-                  ? Text(
-                      logoText,
-                      style: TextStyle(
-                        fontSize: 10, 
-                        fontWeight: FontWeight.bold, 
-                        color: logoText == 'BCA' ? const Color(0xFF0F766E) : const Color(0xFF1D4ED8),
-                      ),
-                    )
-                  : Icon(iconData, color: const Color(0xFF10B981), size: 20.0),
-            ),
-            const SizedBox(width: 14.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(fontSize: 11, color: Color(0xFF94A3B8)),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected ? const Color(0xFF0D9488) : const Color(0xFFCBD5E1),
-                  width: isSelected ? 5.0 : 1.5,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

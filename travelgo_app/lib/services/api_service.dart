@@ -129,22 +129,43 @@ class ApiService {
   }
 
   // 6. FUNGSI VERIFIKASI PEMBAYARAN (POST /api/order/{id}/bayar) - Membutuhkan Token Sanctum
-  static Future<Map<String, dynamic>?> bayarPesanan(int orderId) async {
+  static Future<List<dynamic>?> fetchMetodePembayaran() async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/order/$orderId/bayar'),
+      final response = await http.get(
+        Uri.parse('$baseUrl/payment-methods'),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+          'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $tokenAkses', // Token sanctum wajib disertakan
+          'Authorization': 'Bearer $tokenAkses', 
         },
       );
 
       if (response.statusCode == 200) {
-        // Pembayaran berhasil diverifikasi oleh OrderController@bayar
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        final Map<String, dynamic> dataJson = jsonDecode(response.body);
+        if (dataJson['status'] == 'sukses') {
+          return dataJson['data'] as List<dynamic>;
+        }
       }
       return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> bayarPesanan(int idOrder, int idMetodeBayar) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/order/$idOrder/bayar'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $tokenAkses',
+        },
+        body: jsonEncode({
+          'payment_method_id': idMetodeBayar,
+        }),
+      );
+      return jsonDecode(response.body);
     } catch (e) {
       return null;
     }
